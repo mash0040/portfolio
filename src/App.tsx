@@ -1,14 +1,17 @@
-function App() {
+import { Routes, Route } from "react-router-dom"
+import Layout from "./components/Layout"
+import Home from "./pages/Home"
+import Projects from "./pages/Projects"
+import Contact from "./pages/Contact"
+
+export default function App() {
   return (
-    <main className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold">Portfolio Web App</h1>
-        <p className="mt-4 text-slate-300">
-          React + TypeScript + Tailwind is working.
-        </p>
-      </div>
-    </main>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="projects" element={<Projects />} />
+        <Route path="contact" element={<Contact />} />
+      </Route>
+    </Routes>
   )
 }
-
-export default App
