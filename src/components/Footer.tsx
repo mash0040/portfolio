@@ -8,7 +8,6 @@ export default function Footer() {
           href="https://github.com/mash0040"
           target="_blank"
           rel="noreferrer"
-          aria-label="GitHub profile"
           className="hover:text-white"
         >
           GitHub
@@ -17,7 +16,6 @@ export default function Footer() {
           href="https://www.linkedin.com/in/mashaak"
           target="_blank"
           rel="noreferrer"
-          aria-label="LinkedIn profile"
           className="hover:text-white"
         >
           LinkedIn
