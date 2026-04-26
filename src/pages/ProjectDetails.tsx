@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import { getProjectBySlug } from "../utils/projects"
 
@@ -6,30 +5,36 @@ type Section =
   | { kind: "paragraph"; heading: string; body: string }
   | { kind: "list"; heading: string; items: string[] }
 
+const displayStyle = { fontVariationSettings: '"opsz" 144' }
+
 export default function ProjectDetails() {
   const { slug } = useParams<{ slug: string }>()
   const project = getProjectBySlug(slug)
 
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [slug])
-
   if (!project) {
     return (
-      <div className="mx-auto max-w-6xl py-10 sm:py-14">
-        <div className="rounded-xl border border-dashed border-slate-800 px-6 py-16 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-            Project not found
+      <div className="mx-auto max-w-6xl py-20 sm:py-28">
+        <div className="border border-dashed border-slate-800 px-6 py-20 text-center">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+            404
+          </p>
+          <h1
+            className="mt-5 font-display text-3xl font-medium tracking-tight text-white sm:text-4xl"
+            style={displayStyle}
+          >
+            Project not found.
           </h1>
-          <p className="mt-3 text-base text-slate-400">
+          <p className="mt-4 text-base text-slate-400">
             We couldn't find that project.
           </p>
           <Link
             to="/projects"
-            className="mt-4 inline-block text-sm font-medium text-sky-400 transition-colors hover:text-sky-300"
+            className="group mt-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-white"
           >
-            <span aria-hidden="true" className="mr-1">&larr;</span>
-            Back to projects
+            <span aria-hidden="true">←</span>
+            <span className="border-b border-slate-700 pb-0.5 transition-colors group-hover:border-white">
+              Back to projects
+            </span>
           </Link>
         </div>
       </div>
@@ -54,74 +59,98 @@ export default function ProjectDetails() {
   const hasBody = Boolean(project.overview) || sections.length > 0 || hasLinks
 
   return (
-    <div className="mx-auto max-w-6xl py-10 sm:py-14">
+    <div className="mx-auto max-w-6xl py-20 sm:py-28">
       <Link
         to="/projects"
-        className="inline-flex items-center text-sm font-medium text-slate-400 transition-colors hover:text-white"
+        className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none"
       >
-        <span aria-hidden="true" className="mr-1">&larr;</span>
-        Back to projects
+        <span
+          aria-hidden="true"
+          className="transition-transform group-hover:-translate-x-0.5"
+        >
+          ←
+        </span>
+        <span className="border-b border-slate-700 pb-0.5 transition-colors group-hover:border-white">
+          Back to projects
+        </span>
       </Link>
 
-      <header className="mt-6 max-w-3xl">
-        <p className="text-xs font-semibold uppercase tracking-widest text-sky-400">
+      <header className="mt-12 max-w-3xl">
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
           Case Study
         </p>
-        <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
+        <h1
+          className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl"
+          style={displayStyle}
+        >
           {project.title}
         </h1>
-        <p className="mt-5 text-base leading-relaxed text-slate-300 sm:text-lg">
+        <p className="mt-7 text-base leading-relaxed text-slate-300 sm:text-lg">
           {project.description}
         </p>
 
         {(project.year || project.role) && (
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-400">
+          <dl className="mt-8 grid grid-cols-2 gap-x-8 gap-y-3 border-t border-slate-800 pt-6 font-mono text-xs uppercase tracking-widest sm:max-w-md sm:grid-cols-[auto,1fr]">
             {project.year && (
-              <span>
-                <span className="text-slate-500">Year:</span> {project.year}
-              </span>
+              <>
+                <dt className="text-slate-500">Year</dt>
+                <dd className="text-slate-300">{project.year}</dd>
+              </>
             )}
             {project.role && (
-              <span>
-                <span className="text-slate-500">Role:</span> {project.role}
-              </span>
+              <>
+                <dt className="text-slate-500">Role</dt>
+                <dd className="text-slate-300">{project.role}</dd>
+              </>
             )}
-          </div>
+          </dl>
         )}
 
         {project.tech.length > 0 && (
-          <ul className="mt-5 flex flex-wrap gap-1.5">
-            {project.tech.map((t) => (
-              <li
-                key={t}
-                className="rounded-md border border-slate-700/60 bg-slate-800/60 px-2 py-0.5 text-xs font-medium text-slate-300"
-              >
-                {t}
+          <ul className="mt-6 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px] tracking-tight text-slate-400">
+            {project.tech.map((t, i) => (
+              <li key={t} className="flex items-center gap-3">
+                {i > 0 && (
+                  <span aria-hidden="true" className="text-slate-700">
+                    ·
+                  </span>
+                )}
+                <span>{t}</span>
               </li>
             ))}
           </ul>
         )}
 
         {hasLinks && (
-          <div className="mt-6 flex flex-wrap gap-3 text-sm">
+          <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm">
             {project.liveUrl && (
               <a
                 href={project.liveUrl}
                 target="_blank"
-                rel="noreferrer"
-                className="rounded-md bg-sky-500 px-4 py-2 font-medium text-white transition-colors hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-md bg-sky-500 px-5 py-2.5 font-medium text-slate-950 transition-colors hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               >
-                View live <span aria-hidden="true">-&gt;</span>
+                View live <span aria-hidden="true">→</span>
+                <span className="sr-only"> (opens in new tab)</span>
               </a>
             )}
             {project.repoUrl && (
               <a
                 href={project.repoUrl}
                 target="_blank"
-                rel="noreferrer"
-                className="rounded-md border border-slate-700 px-4 py-2 font-medium text-slate-200 transition-colors hover:border-slate-500 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 font-medium text-slate-300 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none"
               >
-                View code <span aria-hidden="true">-&gt;</span>
+                <span className="border-b border-slate-700 pb-0.5 transition-colors group-hover:border-white">
+                  View code
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="text-slate-500 transition-all group-hover:translate-x-0.5 group-hover:text-white"
+                >
+                  →
+                </span>
+                <span className="sr-only"> (opens in new tab)</span>
               </a>
             )}
           </div>
@@ -129,65 +158,89 @@ export default function ProjectDetails() {
       </header>
 
       {hasBody && (
-        <div className="mt-10 border-t border-slate-800 pt-10 sm:mt-14 sm:pt-14">
-          <div className="max-w-3xl space-y-12 sm:space-y-16">
+        <div className="mt-16 border-t border-slate-800/80 pt-16 sm:mt-20 sm:pt-20">
+          <div className="max-w-3xl space-y-14 sm:space-y-16">
             {project.overview && (
               <p className="text-lg leading-relaxed text-slate-200">
                 {project.overview}
               </p>
             )}
 
-            {sections.map((section) => (
-              <section key={section.heading}>
-                <h2 className="text-xl font-semibold tracking-tight text-white">
-                  {section.heading}
-                </h2>
-                {section.kind === "paragraph" ? (
-                  <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-slate-300">
-                    {section.body}
+            {sections.map((section, i) => (
+              <section key={section.heading} className="grid gap-2 sm:grid-cols-12">
+                <div className="sm:col-span-3">
+                  <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+                    <span className="text-slate-400">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    &nbsp;—&nbsp;
+                    {section.heading}
                   </p>
-                ) : (
-                  <ul className="mt-3 list-disc space-y-2 pl-5 text-base leading-relaxed text-slate-300 marker:text-sky-500/60">
-                    {section.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                )}
+                </div>
+                <div className="sm:col-span-9">
+                  {section.kind === "paragraph" ? (
+                    <p className="whitespace-pre-line text-base leading-relaxed text-slate-300">
+                      {section.body}
+                    </p>
+                  ) : (
+                    <ul className="list-disc space-y-3 pl-5 text-base leading-relaxed text-slate-300 marker:text-slate-600">
+                      {section.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </section>
             ))}
 
             {hasLinks && (
-              <section>
-                <h2 className="text-xl font-semibold tracking-tight text-white">
-                  Links
-                </h2>
-                <div className="mt-3 space-y-3 rounded-lg border border-slate-800 bg-slate-900/60 p-5">
-                  {project.liveUrl && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="group flex items-baseline gap-3 text-sm"
-                    >
-                      <span className="w-14 shrink-0 text-slate-500">Live</span>
-                      <span className="break-all font-medium text-sky-400 transition-colors group-hover:text-sky-300">
-                        {project.liveUrl}
-                      </span>
-                    </a>
-                  )}
-                  {project.repoUrl && (
-                    <a
-                      href={project.repoUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="group flex items-baseline gap-3 text-sm"
-                    >
-                      <span className="w-14 shrink-0 text-slate-500">Code</span>
-                      <span className="break-all font-medium text-sky-400 transition-colors group-hover:text-sky-300">
-                        {project.repoUrl}
-                      </span>
-                    </a>
-                  )}
+              <section className="grid gap-2 sm:grid-cols-12">
+                <div className="sm:col-span-3">
+                  <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+                    <span className="text-slate-400">
+                      {String(sections.length + 1).padStart(2, "0")}
+                    </span>
+                    &nbsp;—&nbsp;
+                    Links
+                  </p>
+                </div>
+                <div className="sm:col-span-9">
+                  <ul className="space-y-4">
+                    {project.liveUrl && (
+                      <li>
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-baseline gap-4 text-sm"
+                        >
+                          <span className="w-14 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-500">
+                            Live
+                          </span>
+                          <span className="break-all border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
+                            {project.liveUrl}
+                          </span>
+                        </a>
+                      </li>
+                    )}
+                    {project.repoUrl && (
+                      <li>
+                        <a
+                          href={project.repoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-baseline gap-4 text-sm"
+                        >
+                          <span className="w-14 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-500">
+                            Code
+                          </span>
+                          <span className="break-all border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
+                            {project.repoUrl}
+                          </span>
+                        </a>
+                      </li>
+                    )}
+                  </ul>
                 </div>
               </section>
             )}

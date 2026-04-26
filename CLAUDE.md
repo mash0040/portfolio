@@ -50,3 +50,9 @@ Portfolio — A personal web app to showcase my projects, skills, and experience
 - Keep project data separate from UI.
 - Avoid adding backend features before the portfolio needs them.
 - Every showcased project should explain the problem, tools, process, challenges, and result.
+
+## Agents
+
+| Agent | Invoke when |
+|-------|-------------|
+| ui-reviewer | Reviewing any .tsx/.css changes before shipping or showing to recruiters |

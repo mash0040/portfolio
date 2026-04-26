@@ -7,6 +7,7 @@ export type Project = {
   liveUrl?: string
   year?: number
   role?: string
+  featured?: boolean
   overview?: string
   problem?: string
   features?: string[]

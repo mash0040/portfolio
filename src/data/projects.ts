@@ -12,6 +12,7 @@ export const projects: Project[] = [
     liveUrl: "https://example.com",
     year: 2026,
     role: "Designer & Developer",
+    featured: true,
     overview:
       "A static portfolio site that puts the work first. Each project has its own case study page with consistent typography, predictable structure, and no flashy animation getting in the way of the writing.",
     problem:

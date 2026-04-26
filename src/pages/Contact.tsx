@@ -25,70 +25,78 @@ const contactMethods: {
 
 export default function Contact() {
   return (
-    <div className="mx-auto max-w-6xl py-10 sm:py-14">
+    <div className="mx-auto max-w-6xl py-20 sm:py-28">
       <header className="max-w-3xl">
-        <p className="text-xs font-semibold uppercase tracking-widest text-sky-400">
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
           Contact
         </p>
-        <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
+        <h1
+          className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl"
+          style={{ fontVariationSettings: '"opsz" 144' }}
+        >
           Get in touch.
         </h1>
-        <p className="mt-5 text-base leading-relaxed text-slate-300 sm:text-lg">
+        <p className="mt-7 text-base leading-relaxed text-slate-300 sm:text-lg">
           The fastest way to reach me is by email. I'm also on GitHub and
           LinkedIn &mdash; happy to chat about work, collaboration, or
           interesting bugs.
         </p>
       </header>
 
-      <div className="mt-10 border-t border-slate-800 pt-10 sm:mt-14 sm:pt-14">
-        <div className="max-w-2xl">
-          <div className="space-y-3 rounded-lg border border-slate-800 bg-slate-900/60 p-5">
+      <div className="mt-16 grid gap-2 border-t border-slate-800/80 pt-16 sm:mt-20 sm:grid-cols-12 sm:pt-20">
+        <div className="sm:col-span-3">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+            <span className="text-slate-400">01</span>
+            &nbsp;—&nbsp;
+            Channels
+          </p>
+        </div>
+        <div className="sm:col-span-9">
+          <ul role="list" className="divide-y divide-slate-800 border-y border-slate-800">
             {contactMethods.map((method) => (
-              <a
-                key={method.label}
-                href={method.href}
-                {...(method.external
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-                className="group flex items-baseline gap-3 text-sm focus-visible:outline-none"
-              >
-                <span className="w-20 shrink-0 text-slate-500">
-                  {method.label}
-                </span>
-                <span className="break-all font-medium text-sky-400 transition-colors group-hover:text-sky-300 group-focus-visible:text-sky-300 group-focus-visible:underline group-focus-visible:underline-offset-4">
-                  {method.value}
-                  {method.external && (
-                    <span className="sr-only"> (opens in new tab)</span>
-                  )}
-                </span>
-              </a>
+              <li key={method.label}>
+                <a
+                  href={method.href}
+                  {...(method.external
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                  className="group flex items-baseline gap-6 py-5 text-base focus-visible:outline-none"
+                >
+                  <span className="w-24 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-500">
+                    {method.label}
+                  </span>
+                  <span className="break-all font-medium text-white transition-colors group-hover:text-slate-200 group-focus-visible:underline group-focus-visible:underline-offset-4">
+                    {method.value}
+                    {method.external && (
+                      <span className="sr-only"> (opens in new tab)</span>
+                    )}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="ml-auto text-slate-600 transition-all group-hover:translate-x-0.5 group-hover:text-white"
+                  >
+                    →
+                  </span>
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
 
           <a
             href="/resume.pdf"
             download
-            className="mt-8 inline-flex items-center rounded-md border border-slate-700 px-5 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:border-slate-500 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+            className="group mt-10 inline-flex items-center gap-2 rounded-md border border-slate-700 px-5 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:border-white hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
-            Download resume{" "}
-            <span aria-hidden="true" className="ml-1">
-              -&gt;
+            Download resume
+            <span
+              aria-hidden="true"
+              className="text-slate-500 transition-all group-hover:translate-x-0.5 group-hover:text-white"
+            >
+              ↓
             </span>
           </a>
 
-          {/* <div className="mt-8">
-            <span
-              aria-disabled="true"
-              className="inline-flex cursor-not-allowed items-center rounded-md border border-slate-800 px-5 py-2.5 text-sm font-medium text-slate-500"
-            >
-              Resume &mdash; coming soon
-            </span>
-            <p className="mt-2 text-xs text-slate-500">
-              Available for download shortly.
-            </p>
-          </div> */}
-
-          <p className="mt-8 text-sm text-slate-500">
+          <p className="mt-10 font-mono text-xs uppercase tracking-widest text-slate-500">
             I usually reply within a day or two.
           </p>
         </div>

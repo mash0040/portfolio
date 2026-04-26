@@ -3,84 +3,134 @@ import ProjectCard from "../components/ProjectCard";
 import { getFeaturedProjects } from "../utils/projects";
 
 export default function Home() {
-  const ctaBaseClass =
-    "rounded-md px-5 py-2.5 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2";
-  const primaryCtaClass = `${ctaBaseClass} bg-sky-500 text-white hover:bg-sky-400 focus-visible:ring-sky-300`;
-  const secondaryCtaClass = `${ctaBaseClass} border border-slate-700 text-slate-200 hover:border-slate-500 hover:text-white focus-visible:ring-slate-400`;
-
   const featured = getFeaturedProjects(3);
 
   return (
     <>
-      <section className="mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center">
-      <div className="max-w-2xl">
-        <p className="text-xs font-semibold uppercase tracking-widest text-sky-400">
-          Software Developer
-        </p>
+      <section
+        aria-labelledby="hero-heading"
+        className="relative isolate overflow-hidden"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[640px]"
+          style={{
+            backgroundImage:
+              "radial-gradient(60% 55% at 30% 20%, rgba(56, 189, 248, 0.14), transparent 70%)",
+            maskImage:
+              "radial-gradient(70% 70% at 30% 30%, black, transparent 80%)",
+            WebkitMaskImage:
+              "radial-gradient(70% 70% at 30% 30%, black, transparent 80%)",
+          }}
+        />
 
-        <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-          I build practical web apps that are fast, clean, and easy to maintain.
-        </h1>
+        <div className="mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center py-20 sm:py-28">
+          <div className="max-w-3xl">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+              01 &nbsp;—&nbsp; Software Developer
+            </p>
 
-        <p className="mt-5 text-base leading-relaxed text-slate-300 sm:text-lg">
-          I'm <span className="text-white">Ekene</span>, a software developer
-          focused on building reliable, real-world web applications. I work
-          across React, TypeScript, and Laravel, with experience designing REST
-          APIs and debugging production systems. I also bring experience working
-          with AI systems, where I evaluated model outputs, wrote structured
-          prompts, and identified reproducible defects to improve system
-          accuracy and reliability.
-        </p>
+            <h1
+              id="hero-heading"
+              className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl"
+              style={{ fontVariationSettings: '"opsz" 144' }}
+            >
+              I build practical web apps that are fast, clean, and easy to
+              maintain.
+            </h1>
 
-        <div className="mt-8 inline-flex items-center gap-2 text-sm text-slate-400">
-          <span
-            aria-hidden="true"
-            className="h-2 w-2 rounded-full bg-emerald-400"
-          />
-          Available for new opportunities
+            <p className="mt-7 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              I'm <span className="text-white">Ekene</span>, a software
+              developer focused on building reliable, real-world web
+              applications. I work across React, TypeScript, and Laravel, with
+              experience designing REST APIs and debugging production systems.
+              I also bring experience working with AI systems &mdash; evaluating
+              model outputs, writing structured prompts, and identifying
+              reproducible defects to improve system accuracy and reliability.
+            </p>
+
+            <div className="mt-8 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-slate-400">
+              <span
+                aria-hidden="true"
+                className="h-1.5 w-1.5 rounded-full bg-emerald-400 ring-2 ring-emerald-400/20"
+              />
+              Available for new opportunities
+            </div>
+
+            <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm">
+              <Link
+                to="/projects"
+                className="inline-flex items-center gap-2 rounded-md bg-sky-500 px-5 py-2.5 font-medium text-slate-950 transition-colors hover:bg-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              >
+                View projects
+                <span aria-hidden="true">→</span>
+              </Link>
+              <Link
+                to="/contact"
+                className="group inline-flex items-center gap-2 font-medium text-slate-300 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none"
+              >
+                <span className="border-b border-slate-700 pb-0.5 transition-colors group-hover:border-white">
+                  Get in touch
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="text-slate-500 transition-all group-hover:translate-x-0.5 group-hover:text-white"
+                >
+                  →
+                </span>
+              </Link>
+            </div>
+          </div>
         </div>
-
-        <div className="mt-5 flex flex-wrap gap-3 text-sm">
-          <Link to="/projects" className={primaryCtaClass}>
-            View projects <span aria-hidden="true">-&gt;</span>
-          </Link>
-          <Link to="/contact" className={secondaryCtaClass}>
-            Get in touch
-          </Link>
-        </div>
-      </div>
       </section>
 
       {featured.length > 0 && (
-        <section className="mx-auto max-w-6xl py-10 sm:py-14">
-          <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-widest text-sky-400">
-                Featured Work
-              </p>
-              <h2 className="mt-3 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
-                Selected projects
-              </h2>
-              <p className="mt-3 text-base leading-relaxed text-slate-300">
-                A few things I've built recently &mdash; full case studies on
-                the projects page.
-              </p>
-            </div>
-            <Link
-              to="/projects"
-              className="shrink-0 text-sm font-medium text-sky-400 transition-colors hover:text-sky-300"
-            >
-              View all projects <span aria-hidden="true">-&gt;</span>
-            </Link>
-          </header>
+        <section
+          aria-labelledby="recent-heading"
+          className="border-t border-slate-800/80"
+        >
+          <div className="mx-auto max-w-6xl py-20 sm:py-28">
+            <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-2xl">
+                <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+                  02 &nbsp;—&nbsp; Recent Work
+                </p>
+                <h2
+                  id="recent-heading"
+                  className="mt-5 font-display text-4xl font-medium leading-tight tracking-tight text-white sm:text-5xl"
+                  style={{ fontVariationSettings: '"opsz" 144' }}
+                >
+                  What I'm building lately.
+                </h2>
+                <p className="mt-4 text-base leading-relaxed text-slate-400">
+                  A few things I've shipped recently &mdash; full case studies
+                  on the projects page.
+                </p>
+              </div>
+              <Link
+                to="/projects"
+                className="group inline-flex shrink-0 items-center gap-2 font-mono text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none"
+              >
+                <span className="border-b border-slate-700 pb-0.5 transition-colors group-hover:border-white">
+                  View all
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="transition-all group-hover:translate-x-0.5"
+                >
+                  →
+                </span>
+              </Link>
+            </header>
 
-          <ul className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8 xl:grid-cols-3">
-            {featured.map((project) => (
-              <li key={project.slug}>
-                <ProjectCard project={project} />
-              </li>
-            ))}
-          </ul>
+            <ul className="mt-12 grid grid-cols-1 gap-5 sm:mt-14 sm:grid-cols-2 lg:gap-6 xl:grid-cols-3">
+              {featured.map((project) => (
+                <li key={project.slug}>
+                  <ProjectCard project={project} />
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
       )}
     </>

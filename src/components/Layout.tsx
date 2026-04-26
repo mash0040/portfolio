@@ -1,12 +1,20 @@
 import { Outlet } from "react-router-dom"
 import Navbar from "./Navbar"
 import Footer from "./Footer"
+import ScrollToTop from "./ScrollToTop"
 
 export default function Layout() {
   return (
     <div className="flex min-h-screen flex-col bg-slate-950 text-white">
+      <ScrollToTop />
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-sky-500 focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-white focus:outline-none focus:ring-2 focus:ring-sky-300"
+      >
+        Skip to content
+      </a>
       <Navbar />
-      <main className="flex-1 p-6">
+      <main id="main-content" tabIndex={-1} className="flex-1 px-6 outline-none">
         <Outlet />
       </main>
       <Footer />

@@ -7,62 +7,77 @@ export default function ProjectCard({ project }: Props) {
   const hasLinks = Boolean(project.repoUrl || project.liveUrl)
 
   return (
-    <article className="group relative flex h-full flex-col rounded-xl border border-slate-800 bg-slate-900/80 p-6 shadow-lg shadow-black/20 ring-1 ring-white/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:bg-slate-900 hover:shadow-xl hover:shadow-black/40 focus-within:border-slate-600 focus-within:bg-slate-900">
+    <article className="group relative flex h-full flex-col border border-slate-800 bg-slate-950 p-6 transition-colors duration-200 hover:border-slate-600 focus-within:border-slate-600 sm:p-7">
       <Link
         to={`/projects/${project.slug}`}
         aria-label={`View ${project.title} case study`}
-        className="absolute inset-0 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+        className="absolute inset-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
       />
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <h2 className="text-xl font-semibold tracking-tight text-white transition-colors group-hover:text-sky-300 group-focus-within:text-sky-300">
-          {project.title}
-        </h2>
-        {project.year && (
-          <span className="shrink-0 rounded-full border border-slate-700/70 px-2 py-0.5 text-[11px] font-medium text-slate-400">
-            {project.year}
-          </span>
-        )}
-      </div>
 
-      <p className="mb-5 line-clamp-3 text-sm leading-relaxed text-slate-400">
+      {project.year && (
+        <span className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+          {project.year}
+        </span>
+      )}
+
+      <h2
+        className="mt-3 font-display text-2xl font-medium leading-tight tracking-tight text-white transition-colors group-hover:text-slate-200 group-focus-within:text-slate-200 sm:text-[1.65rem]"
+        style={{ fontVariationSettings: '"opsz" 144' }}
+      >
+        {project.title}
+      </h2>
+
+      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-400">
         {project.description}
       </p>
 
-      <ul className="flex flex-wrap gap-1.5">
-        {project.tech.map((t) => (
-          <li
-            key={t}
-            className="rounded-md border border-slate-700/60 bg-slate-800/60 px-2 py-0.5 text-xs font-medium text-slate-300"
-          >
-            {t}
+      <ul className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px] tracking-tight text-slate-400">
+        {project.tech.map((t, i) => (
+          <li key={t} className="flex items-center gap-3">
+            {i > 0 && (
+              <span aria-hidden="true" className="text-slate-700">
+                ·
+              </span>
+            )}
+            <span>{t}</span>
           </li>
         ))}
       </ul>
 
-      {hasLinks && (
-        <div className="relative z-10 mt-auto flex gap-4 border-t border-slate-800 pt-4 text-sm">
-          {project.repoUrl && (
-            <a
-              href={project.repoUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-sm font-medium text-slate-400 transition-colors hover:text-white focus-visible:text-white focus-visible:underline focus-visible:underline-offset-4 focus-visible:outline-none"
-            >
-              Repo <span aria-hidden="true">-&gt;</span>
-            </a>
-          )}
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-sm font-medium text-slate-400 transition-colors hover:text-white focus-visible:text-white focus-visible:underline focus-visible:underline-offset-4 focus-visible:outline-none"
-            >
-              Live <span aria-hidden="true">-&gt;</span>
-            </a>
-          )}
-        </div>
-      )}
+      <div className="relative z-10 mt-auto flex items-end justify-between gap-4 pt-6">
+        {hasLinks ? (
+          <div className="flex gap-5 text-sm">
+            {project.repoUrl && (
+              <a
+                href={project.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-sm font-mono text-xs uppercase tracking-widest text-slate-500 transition-colors hover:text-white focus-visible:text-white focus-visible:underline focus-visible:underline-offset-4 focus-visible:outline-none"
+              >
+                Repo
+              </a>
+            )}
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-sm font-mono text-xs uppercase tracking-widest text-slate-500 transition-colors hover:text-white focus-visible:text-white focus-visible:underline focus-visible:underline-offset-4 focus-visible:outline-none"
+              >
+                Live
+              </a>
+            )}
+          </div>
+        ) : (
+          <span aria-hidden="true" />
+        )}
+        <span
+          aria-hidden="true"
+          className="font-display text-xl text-slate-600 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-white group-focus-within:translate-x-0.5 group-focus-within:text-white"
+        >
+          →
+        </span>
+      </div>
     </article>
   )
 }

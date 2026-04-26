@@ -7,5 +7,13 @@ export function getProjectBySlug(slug: string | undefined): Project | undefined 
 }
 
 export function getFeaturedProjects(limit = 3): Project[] {
-  return projects.slice(0, limit)
+  return projects.filter((p) => p.featured).slice(0, limit)
+}
+
+export function getRecentProjects(): Project[] {
+  return projects.filter((p) => p.featured)
+}
+
+export function getEarlierProjects(): Project[] {
+  return projects.filter((p) => !p.featured)
 }
