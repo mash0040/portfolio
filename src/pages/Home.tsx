@@ -22,7 +22,7 @@ export default function Home() {
           I build practical web apps that are fast, clean, and easy to maintain.
         </h1>
 
-        <p className="mt-6 text-base leading-relaxed text-slate-300 sm:text-lg">
+        <p className="mt-5 text-base leading-relaxed text-slate-300 sm:text-lg">
           I'm <span className="text-white">Ekene</span>, a software developer
           focused on building reliable, real-world web applications. I work
           across React, TypeScript, and Laravel, with experience designing REST
@@ -52,7 +52,7 @@ export default function Home() {
       </section>
 
       {featured.length > 0 && (
-        <section className="mx-auto max-w-6xl py-16 sm:py-24">
+        <section className="mx-auto max-w-6xl py-10 sm:py-14">
           <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-widest text-sky-400">

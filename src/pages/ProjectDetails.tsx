@@ -130,7 +130,7 @@ export default function ProjectDetails() {
 
       {hasBody && (
         <div className="mt-10 border-t border-slate-800 pt-10 sm:mt-14 sm:pt-14">
-          <div className="max-w-3xl space-y-12">
+          <div className="max-w-3xl space-y-12 sm:space-y-16">
             {project.overview && (
               <p className="text-lg leading-relaxed text-slate-200">
                 {project.overview}

@@ -6,7 +6,7 @@ export default function Projects() {
 
   return (
     <div className="mx-auto max-w-6xl py-10 sm:py-14">
-      <header className="max-w-2xl">
+      <header className="max-w-3xl">
         <p className="text-xs font-semibold uppercase tracking-widest text-sky-400">
           Work
         </p>
