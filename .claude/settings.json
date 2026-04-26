@@ -6,7 +6,7 @@
 
   "statusLine": {
     "type": "command",
-    "command": "python -c \"import json,sys;d=json.load(sys.stdin);m=d.get('model',{}).get('display_name','?');c=d.get('context_window',{}).get('used_percentage',0);print(f'[{m}] {c}% context')\""
+    "command": "jq -r '\"[\\(.model.display_name)] | \\(.context_window.used_percentage // 0)% context\"'"
   },
 
   "hooks": {

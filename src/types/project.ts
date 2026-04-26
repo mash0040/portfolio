@@ -7,8 +7,9 @@ export type Project = {
   liveUrl?: string
   year?: number
   role?: string
+  overview?: string
   problem?: string
-  process?: string
+  features?: string[]
   challenges?: string
-  result?: string
+  learnings?: string[]
 }
