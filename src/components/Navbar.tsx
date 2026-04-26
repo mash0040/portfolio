@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { NavLink, useLocation } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
 const links = [
   { to: "/", label: "Home", end: true },
@@ -13,11 +13,6 @@ const baseLinkClass =
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
-  const location = useLocation()
-
-  useEffect(() => {
-    setOpen(false)
-  }, [location.pathname])
 
   useEffect(() => {
     if (!open) return
@@ -27,6 +22,8 @@ export default function Navbar() {
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
   }, [open])
+
+  const closeMenu = () => setOpen(false)
 
   return (
     <nav
@@ -118,6 +115,7 @@ export default function Navbar() {
               <NavLink
                 to={link.to}
                 end={link.end}
+                onClick={closeMenu}
                 className={({ isActive }) =>
                   `${baseLinkClass} block py-2 ${
                     isActive
