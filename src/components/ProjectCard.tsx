@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import type { Project } from "../types/project"
 
 type Props = { project: Project }
@@ -6,7 +7,12 @@ export default function ProjectCard({ project }: Props) {
   const hasLinks = Boolean(project.repoUrl || project.liveUrl)
 
   return (
-    <article className="group flex h-full flex-col rounded-xl border border-slate-800 bg-slate-900/80 p-6 shadow-lg shadow-black/20 ring-1 ring-white/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:bg-slate-900 hover:shadow-xl hover:shadow-black/40 focus-within:border-slate-600 focus-within:bg-slate-900">
+    <article className="group relative flex h-full flex-col rounded-xl border border-slate-800 bg-slate-900/80 p-6 shadow-lg shadow-black/20 ring-1 ring-white/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:bg-slate-900 hover:shadow-xl hover:shadow-black/40 focus-within:border-slate-600 focus-within:bg-slate-900">
+      <Link
+        to={`/projects/${project.slug}`}
+        aria-label={`View ${project.title} case study`}
+        className="absolute inset-0 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+      />
       <div className="mb-3 flex items-start justify-between gap-3">
         <h2 className="text-xl font-semibold tracking-tight text-white transition-colors group-hover:text-sky-300 group-focus-within:text-sky-300">
           {project.title}
@@ -34,7 +40,7 @@ export default function ProjectCard({ project }: Props) {
       </ul>
 
       {hasLinks && (
-        <div className="mt-auto flex gap-4 border-t border-slate-800 pt-4 text-sm">
+        <div className="relative z-10 mt-auto flex gap-4 border-t border-slate-800 pt-4 text-sm">
           {project.repoUrl && (
             <a
               href={project.repoUrl}
