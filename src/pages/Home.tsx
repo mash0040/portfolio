@@ -43,8 +43,8 @@ export default function Home() {
               I'm <span className="text-white">Ekene</span>, a software
               developer focused on building reliable, real-world web
               applications. I work across React, TypeScript, and Laravel, with
-              experience designing REST APIs and debugging production systems.
-              I also bring experience working with AI systems &mdash; evaluating
+              experience designing REST APIs and debugging production systems. I
+              also bring experience working with AI systems &mdash; evaluating
               model outputs, writing structured prompts, and identifying
               reproducible defects to improve system accuracy and reliability.
             </p>
