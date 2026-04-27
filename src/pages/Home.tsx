@@ -45,8 +45,11 @@ export default function Home() {
                 href="https://namedrop.io/Akmasha"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Listen to the pronunciation of Ekene"
+                title="Listen to the pronunciation of Ekene"
+                className="text-white underline decoration-sky-400 underline-offset-4 transition hover:text-sky-300"
               >
-                <span className="text-white">Ekene</span>
+                Ekene
               </a>
               , a software developer focused on building reliable, real-world
               web applications. I work across React, TypeScript, and Laravel,
