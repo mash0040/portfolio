@@ -40,13 +40,21 @@ export default function Home() {
             </h1>
 
             <p className="mt-7 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              I'm <span className="text-white">Ekene</span>, a software
-              developer focused on building reliable, real-world web
-              applications. I work across React, TypeScript, and Laravel, with
-              experience designing REST APIs and debugging production systems. I
-              also bring experience working with AI systems &mdash; evaluating
-              model outputs, writing structured prompts, and identifying
-              reproducible defects to improve system accuracy and reliability.
+              I'm{" "}
+              <a
+                href="https://namedrop.io/Akmasha"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="text-white">Ekene</span>
+              </a>
+              , a software developer focused on building reliable, real-world
+              web applications. I work across React, TypeScript, and Laravel,
+              with experience designing REST APIs and debugging production
+              systems. I also bring experience working with AI systems &mdash;
+              evaluating model outputs, writing structured prompts, and
+              identifying reproducible defects to improve system accuracy and
+              reliability.
             </p>
 
             <div className="mt-8 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-slate-400">
