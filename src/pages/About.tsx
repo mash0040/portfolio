@@ -2,22 +2,33 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 const techGroups: { label: string; items: string[] }[] = [
-  { label: "Frontend", items: ["React", "TypeScript", "Tailwind CSS"] },
-  { label: "Backend", items: ["Laravel", "PHP", "REST APIs"] },
-  { label: "Tools", items: ["Git", "Vite", "GitHub"] },
+  {
+    label: "Frontend",
+    items: ["React", "TypeScript", "Tailwind CSS", "Next.js"],
+  },
+  {
+    label: "Backend",
+    items: ["Node.js", "Express.js", "REST APIs", "JWT Auth"],
+  },
+  {
+    label: "Database & Tools",
+    items: ["MySQL", "Git", "GitHub", "Vite", "Vercel", "Azure"],
+  },
 ];
 
 const experience = [
-  "Debugged production issues across full-stack apps, tracing bugs from the UI down through the API and database layers.",
-  "Built and consumed REST APIs in Laravel, handling auth, validation, and error states cleanly.",
-  "Designed and shipped responsive interfaces in React with TypeScript, prioritizing accessibility and clear state management.",
-  "Worked with relational databases (PostgreSQL, MySQL) — schema design, basic query tuning, and migrations.",
+  "Built and deployed Plant Plotter, a live full-stack garden planning and care-tracking app with authentication, protected routes, garden creation, visual plant planning, companion planting guidance, task tracking, and MySQL persistence.",
+  "Improved a group capstone project into a production-ready app by refining validation, authentication flows, mobile behavior, tracker workflows, API performance, and deployment across Vercel and Azure.",
+  "Designed and consumed REST APIs, handling auth, validation, error states, protected routes, and user-specific data.",
+  "Debugged full-stack issues by tracing problems through the UI, API, database, environment variables, CORS, deployment settings, and browser behavior.",
+  "Built responsive interfaces with React, TypeScript, and Tailwind CSS, focusing on clear layouts, accessible UI patterns, and maintainable component structure.",
 ];
 
 const now = [
-  "Sharpening my Laravel skills with API-first projects.",
-  "Reading more about systems design and reliability.",
-  "Shipping this portfolio and writing case studies for the work in it.",
+  "Improving Plant Plotter as a portfolio-ready full-stack project.",
+  "Strengthening my backend fundamentals with Node.js, Express, REST APIs, authentication, and MySQL.",
+  "Building clearer project case studies that explain not just what I built, but the decisions, trade-offs, and improvements behind the work.",
+  "Targeting entry-level and junior software developer roles where I can contribute to real products and keep growing with a team.",
 ];
 
 const sections: {
@@ -66,9 +77,9 @@ const sections: {
     body: (
       <p className="mt-5 text-base leading-relaxed text-slate-300">
         I've also worked on the AI side of software &mdash; evaluating model
-        outputs, writing structured prompts, and identifying reproducible
-        defects to help improve system accuracy and reliability. It taught me
-        to treat ambiguity as a debugging surface in its own right.
+        outputs, writing structured prompts, validating responses, and
+        identifying reproducible defects. That experience strengthened how I
+        think about debugging, edge cases, clarity, and quality control.
       </p>
     ),
   },
@@ -100,10 +111,11 @@ export default function About() {
           Hi, I'm Ekene.
         </h1>
         <p className="mt-7 text-base leading-relaxed text-slate-300 sm:text-lg">
-          A software developer focused on building practical web apps and
-          debugging production issues end to end. I work mostly across React,
-          TypeScript, and Laravel, with a focus on clean APIs, predictable
-          state flows, and reliable user-facing systems.
+          I'm a software developer focused on building practical full-stack
+          web apps and improving real user flows from the interface down to
+          the API and database. I work mostly across React, TypeScript,
+          Node.js, Express, and MySQL, with a focus on clean APIs,
+          predictable state, authentication, debugging, and deployment.
         </p>
       </header>
 

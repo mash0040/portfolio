@@ -35,8 +35,7 @@ export default function Home() {
               className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl"
               style={{ fontVariationSettings: '"opsz" 144' }}
             >
-              I build practical web apps that are fast, clean, and easy to
-              maintain.
+              I build practical full-stack web apps from idea to deployment.
             </h1>
 
             <p className="mt-7 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
@@ -51,13 +50,11 @@ export default function Home() {
               >
                 Ekene
               </a>
-              , a software developer focused on building reliable, real-world
-              web applications. I work across React, TypeScript, and Laravel,
-              with experience designing REST APIs and debugging production
-              systems. I also bring experience working with AI systems &mdash;
-              evaluating model outputs, writing structured prompts, and
-              identifying reproducible defects to improve system accuracy and
-              reliability.
+              , a software developer focused on building reliable web
+              applications with React, TypeScript, Node.js, Express, and
+              MySQL. I care about clean APIs, responsive interfaces,
+              authentication, and shipping apps that are stable enough for
+              real users.
             </p>
 
             <div className="mt-8 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-slate-400">
