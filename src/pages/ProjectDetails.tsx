@@ -1,9 +1,24 @@
 import { Link, useParams } from "react-router-dom"
 import { getProjectBySlug } from "../utils/projects"
 
+// Resolves any image under src/assets/* at build time. Screenshot entries
+// referencing files that don't exist yet are silently skipped, so the page
+// renders fine even before the actual screenshot files are dropped in.
+const assetUrls = import.meta.glob(
+  "../assets/**/*.{png,jpg,jpeg,webp,gif,svg}",
+  { eager: true, query: "?url", import: "default" },
+) as Record<string, string>
+
+function resolveAsset(relPath: string): string | undefined {
+  return assetUrls[`../assets/${relPath}`]
+}
+
+type ResolvedShot = { src: string; url: string; alt: string; caption?: string }
+
 type Section =
   | { kind: "paragraph"; heading: string; body: string }
   | { kind: "list"; heading: string; items: string[] }
+  | { kind: "screenshots"; heading: string; items: ResolvedShot[] }
 
 const displayStyle = { fontVariationSettings: '"opsz" 144' }
 
@@ -45,11 +60,28 @@ export default function ProjectDetails() {
   if (project.problem) {
     sections.push({ kind: "paragraph", heading: "Problem", body: project.problem })
   }
+  if (project.solution) {
+    sections.push({ kind: "paragraph", heading: "Solution", body: project.solution })
+  }
   if (project.features && project.features.length > 0) {
     sections.push({ kind: "list", heading: "Features", items: project.features })
   }
+  if (project.screenshots && project.screenshots.length > 0) {
+    const resolved: ResolvedShot[] = project.screenshots
+      .map((shot) => {
+        const url = resolveAsset(shot.src)
+        return url ? { ...shot, url } : null
+      })
+      .filter((shot): shot is ResolvedShot => shot !== null)
+    if (resolved.length > 0) {
+      sections.push({ kind: "screenshots", heading: "Screenshots", items: resolved })
+    }
+  }
   if (project.challenges) {
     sections.push({ kind: "paragraph", heading: "Challenges", body: project.challenges })
+  }
+  if (project.improvements && project.improvements.length > 0) {
+    sections.push({ kind: "list", heading: "What I Improved", items: project.improvements })
   }
   if (project.learnings && project.learnings.length > 0) {
     sections.push({ kind: "list", heading: "What I Learned", items: project.learnings })
@@ -182,10 +214,30 @@ export default function ProjectDetails() {
                     <p className="whitespace-pre-line text-base leading-relaxed text-slate-300">
                       {section.body}
                     </p>
-                  ) : (
+                  ) : section.kind === "list" ? (
                     <ul className="list-disc space-y-3 pl-5 text-base leading-relaxed text-slate-300 marker:text-slate-600">
                       {section.items.map((item) => (
                         <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <ul className="space-y-8">
+                      {section.items.map((shot) => (
+                        <li key={shot.src}>
+                          <figure>
+                            <img
+                              src={shot.url}
+                              alt={shot.alt}
+                              loading="lazy"
+                              className="block w-full rounded-md border border-slate-800 bg-slate-900"
+                            />
+                            {shot.caption && (
+                              <figcaption className="mt-3 font-mono text-xs leading-relaxed text-slate-500">
+                                {shot.caption}
+                              </figcaption>
+                            )}
+                          </figure>
+                        </li>
                       ))}
                     </ul>
                   )}

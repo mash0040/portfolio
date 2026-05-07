@@ -1,3 +1,9 @@
+export type Screenshot = {
+  src: string
+  alt: string
+  caption?: string
+}
+
 export type Project = {
   slug: string
   title: string
@@ -10,7 +16,10 @@ export type Project = {
   featured?: boolean
   overview?: string
   problem?: string
+  solution?: string
   features?: string[]
   challenges?: string
+  improvements?: string[]
   learnings?: string[]
+  screenshots?: Screenshot[]
 }
