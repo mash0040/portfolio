@@ -53,7 +53,7 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/mash0040/Plant-Plotter.git",
     liveUrl: "https://plantplotter.me",
     year: 2026,
-    role: "Full-stack developer / solo rebuild after group capstone",
+    role: "Full-stack developer / solo continuation of client group project",
     overview:
       "Plant Plotter is a live garden planning and care-tracking app. Users can create an account, set up one or more gardens, plan where plants should go, review companion planting guidance, and track care activities like watering, fertilizing, pruning, harvesting, weeding, and planting. The app is deployed with a Next.js frontend on Vercel, an Express API on Azure App Service, and a MySQL database hosted on an Azure Ubuntu VM.",
     problem:
@@ -71,7 +71,7 @@ export const projects: Project[] = [
       "Context-aware task creation for plantings, individual garden plants, or whole gardens",
     ],
     challenges:
-      "The biggest challenge was turning a class project into a live application with real production concerns. I had to improve authentication, handle expired sessions, reduce unstable user flows, clean up validation, make the planner easier to use across desktop and mobile, and deploy the frontend, backend, database, DNS, and email service so they worked together reliably.",
+      "The biggest challenge was turning a client group project into a live application with real production concerns. I had to improve authentication, handle expired sessions, reduce unstable user flows, clean up validation, make the planner easier to use across desktop and mobile, and deploy the frontend, backend, database, DNS, and email service so they worked together reliably.",
     improvements: [
       "Shipped to a real production environment behind plantplotter.me with a custom domain",
       "Replaced course-grade auth with JWT, bcrypt, password reset, and expired-session cleanup",

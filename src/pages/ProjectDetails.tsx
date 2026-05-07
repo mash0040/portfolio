@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { getProjectBySlug } from "../utils/projects"
 
@@ -25,6 +26,44 @@ const displayStyle = { fontVariationSettings: '"opsz" 144' }
 export default function ProjectDetails() {
   const { slug } = useParams<{ slug: string }>()
   const project = getProjectBySlug(slug)
+
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const triggerRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null)
+
+  const closeLightbox = useCallback(() => {
+    setLightboxIndex((idx) => {
+      if (idx === null) return null
+      // Wait for the lightbox to unmount before restoring focus to the trigger.
+      requestAnimationFrame(() => triggerRefs.current[idx]?.focus())
+      return null
+    })
+  }, [])
+
+  useEffect(() => {
+    if (lightboxIndex === null) return
+    closeBtnRef.current?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeLightbox()
+        return
+      }
+      // Trap focus inside the dialog. The Close button is the only focusable
+      // element, so any Tab / Shift+Tab attempt just re-focuses it instead of
+      // leaking into the page behind the overlay.
+      if (e.key === "Tab") {
+        e.preventDefault()
+        closeBtnRef.current?.focus()
+      }
+    }
+    document.addEventListener("keydown", onKey)
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.removeEventListener("keydown", onKey)
+      document.body.style.overflow = prevOverflow
+    }
+  }, [lightboxIndex, closeLightbox])
 
   if (!project) {
     return (
@@ -56,6 +95,14 @@ export default function ProjectDetails() {
     )
   }
 
+  const screenshots: ResolvedShot[] = (project.screenshots ?? [])
+    .map((shot) => {
+      const url = resolveAsset(shot.src)
+      return url ? { ...shot, url } : null
+    })
+    .filter((shot): shot is ResolvedShot => shot !== null)
+  const activeShot = lightboxIndex !== null ? screenshots[lightboxIndex] ?? null : null
+
   const sections: Section[] = []
   if (project.problem) {
     sections.push({ kind: "paragraph", heading: "Problem", body: project.problem })
@@ -66,16 +113,8 @@ export default function ProjectDetails() {
   if (project.features && project.features.length > 0) {
     sections.push({ kind: "list", heading: "Features", items: project.features })
   }
-  if (project.screenshots && project.screenshots.length > 0) {
-    const resolved: ResolvedShot[] = project.screenshots
-      .map((shot) => {
-        const url = resolveAsset(shot.src)
-        return url ? { ...shot, url } : null
-      })
-      .filter((shot): shot is ResolvedShot => shot !== null)
-    if (resolved.length > 0) {
-      sections.push({ kind: "screenshots", heading: "Screenshots", items: resolved })
-    }
+  if (screenshots.length > 0) {
+    sections.push({ kind: "screenshots", heading: "Screenshots", items: screenshots })
   }
   if (project.challenges) {
     sections.push({ kind: "paragraph", heading: "Challenges", body: project.challenges })
@@ -122,7 +161,7 @@ export default function ProjectDetails() {
         </p>
 
         {(project.year || project.role) && (
-          <dl className="mt-8 grid grid-cols-2 gap-x-8 gap-y-3 border-t border-slate-800 pt-6 font-mono text-xs uppercase tracking-widest sm:max-w-md sm:grid-cols-[auto,1fr]">
+          <dl className="mt-8 grid grid-cols-2 gap-x-8 gap-y-3 border-t border-slate-800 pt-6 font-mono text-xs uppercase tracking-widest sm:max-w-md sm:grid-cols-[auto_1fr]">
             {project.year && (
               <>
                 <dt className="text-slate-500">Year</dt>
@@ -201,7 +240,7 @@ export default function ProjectDetails() {
             {sections.map((section, i) => (
               <section key={section.heading} className="grid gap-2 sm:grid-cols-12">
                 <div className="sm:col-span-3">
-                  <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+                  <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-400">
                     <span className="text-slate-400">
                       {String(i + 1).padStart(2, "0")}
                     </span>
@@ -222,17 +261,27 @@ export default function ProjectDetails() {
                     </ul>
                   ) : (
                     <ul className="space-y-8">
-                      {section.items.map((shot) => (
+                      {section.items.map((shot, shotIndex) => (
                         <li key={shot.src}>
                           <figure>
-                            <img
-                              src={shot.url}
-                              alt={shot.alt}
-                              loading="lazy"
-                              className="block w-full rounded-md border border-slate-800 bg-slate-900"
-                            />
+                            <button
+                              type="button"
+                              ref={(el) => {
+                                triggerRefs.current[shotIndex] = el
+                              }}
+                              onClick={() => setLightboxIndex(shotIndex)}
+                              aria-label={`Open ${shot.alt} at full size`}
+                              className="block w-full cursor-zoom-in overflow-hidden rounded-md border border-slate-800 bg-slate-900 transition-colors hover:border-slate-600 focus-visible:border-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                            >
+                              <img
+                                src={shot.url}
+                                alt={shot.alt}
+                                loading="lazy"
+                                className="block w-full"
+                              />
+                            </button>
                             {shot.caption && (
-                              <figcaption className="mt-3 font-mono text-xs leading-relaxed text-slate-500">
+                              <figcaption className="mt-3 font-mono text-xs leading-relaxed text-slate-400">
                                 {shot.caption}
                               </figcaption>
                             )}
@@ -248,7 +297,7 @@ export default function ProjectDetails() {
             {hasLinks && (
               <section className="grid gap-2 sm:grid-cols-12">
                 <div className="sm:col-span-3">
-                  <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+                  <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-400">
                     <span className="text-slate-400">
                       {String(sections.length + 1).padStart(2, "0")}
                     </span>
@@ -269,7 +318,7 @@ export default function ProjectDetails() {
                           <span className="w-14 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-500">
                             Live
                           </span>
-                          <span className="break-all border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
+                          <span className="wrap-break-word border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
                             {project.liveUrl}
                           </span>
                         </a>
@@ -286,7 +335,7 @@ export default function ProjectDetails() {
                           <span className="w-14 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-500">
                             Code
                           </span>
-                          <span className="break-all border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
+                          <span className="wrap-break-word border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
                             {project.repoUrl}
                           </span>
                         </a>
@@ -297,6 +346,36 @@ export default function ProjectDetails() {
               </section>
             )}
           </div>
+        </div>
+      )}
+
+      {activeShot && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeShot.alt}
+          onClick={(e) => {
+            // Only close when the click hits the backdrop itself, not a child
+            // (image, close button, or the transparent letterbox area). This
+            // also lets us drop the stopPropagation on the image.
+            if (e.target === e.currentTarget) closeLightbox()
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 p-4 backdrop-blur-sm sm:p-8"
+        >
+          <button
+            ref={closeBtnRef}
+            type="button"
+            onClick={closeLightbox}
+            aria-label="Close screenshot"
+            className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-md border border-slate-700 bg-slate-900/80 px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-slate-300 transition-colors hover:border-white hover:text-white focus-visible:border-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+          >
+            Close <span aria-hidden="true">×</span>
+          </button>
+          <img
+            src={activeShot.url}
+            alt={activeShot.alt}
+            className="max-h-[90vh] max-w-[95vw] rounded-md object-contain shadow-2xl"
+          />
         </div>
       )}
     </div>
