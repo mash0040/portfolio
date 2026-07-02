@@ -8,7 +8,7 @@ export function getProjectBySlug(slug: string | undefined): Project | undefined 
 
 export function getFeaturedProjects(limit?: number): Project[] {
   const featured = projects.filter((p) => p.featured)
-  return limit ? featured.slice(0, limit) : featured
+  return limit !== undefined ? featured.slice(0, limit) : featured
 }
 
 export function getSelectedProjects(): Project[] {
