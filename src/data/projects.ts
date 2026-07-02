@@ -18,7 +18,7 @@ export const projects: Project[] = [
       "Vercel",
       "GitHub Actions",
     ],
-    repoUrl: "https://github.com/mash0040/Plant-Plotter.git",
+    repoUrl: "https://github.com/mash0040/Plant-Plotter",
     liveUrl: "https://plantplotter.me",
     year: 2026,
     role: "Full-stack developer / solo continuation of client group project",
@@ -94,30 +94,32 @@ export const projects: Project[] = [
     slug: "portfolio",
     title: "Personal Portfolio",
     description:
-      "This site — a personal portfolio built to showcase projects with clean, content-first case studies.",
+      "This site itself: a personal portfolio built with React, TypeScript, and Tailwind CSS that presents each project as a full case study.",
     tech: ["React", "TypeScript", "Tailwind", "Vite", "React Router"],
     repoUrl: "https://github.com/mash0040/portfolio",
     liveUrl: "https://akmasha.dev",
     year: 2026,
     role: "Designer & Developer",
     overview:
-      "A static portfolio site that puts the work first. Each project has its own case study page with consistent typography, predictable structure, and no flashy animation getting in the way of the writing.",
+      "A static portfolio site that puts the work first. Each project has its own case study page with consistent typography, a predictable structure, and nothing flashy getting in the way of the writing. It's a single-page React app written in TypeScript, styled with Tailwind CSS, routed with React Router, and deployed on Cloudflare Pages.",
     problem:
-      "Most junior-developer portfolios bury the actual work under heavy animation, generic templates, or one-paragraph project blurbs that don't explain anything. I wanted a site that reads more like a designer's case-study deck — each project should answer what the problem was, what I built, and what I took away from it.",
+      "Most junior developer portfolios lean on heavy animation, generic templates, or one-paragraph blurbs that don't explain the work. I wanted a site that reads more like a case study deck: each project should answer what the problem was, what I built, and what I took away from it.",
     features: [
       "Reusable ProjectCard with hover and focus-visible states and a full-card click target",
-      "Dynamic /projects/:slug route with graceful handling of unknown slugs",
+      "Dynamic /projects/:slug routes via React Router, with a fallback page for unknown slugs",
       "Structured case study layout: Overview, Problem, Features, Challenges, What I Learned, Links",
+      "Project content kept in one typed data file, separate from the UI components",
+      "Screenshot galleries with lazy-loaded images and a keyboard-accessible lightbox",
       "Responsive grid that scales from a single column on mobile to three columns at xl",
       "Dark, accessible color palette tuned for long-form reading",
     ],
     challenges:
-      "The trickiest part was making the whole project card clickable while keeping the inline Repo and Live links independently actionable — nesting <a> tags inside <Link> isn't valid HTML. I solved it with an absolutely-positioned overlay link and lifted the action links above it with z-index so both interaction targets work without breaking semantics.",
+      "The trickiest part was making the whole project card clickable while keeping the inline Repo and Live links independently actionable, since nesting <a> tags inside a <Link> isn't valid HTML. I solved it with an absolutely positioned overlay link and lifted the action links above it with z-index, so both targets work without breaking semantics.",
     learnings: [
       "Designing a small system of reusable components before writing any pages kept every later change small and predictable.",
-      "Constraining text width to roughly 65 characters is the single highest-leverage typography decision on a content page.",
+      "Keeping text width to roughly 65 characters did more for readability than any other typography decision.",
       "Tailwind v4's marker: variant lets you style list bullets without giving up native <ul> semantics.",
-      "Optional, gracefully-degrading data fields make a content-driven site easier to fill out over time — half-finished case studies still look intentional.",
+      "Optional data fields make a content-driven site easier to fill out over time: a case study with missing sections still renders as an intentional page.",
     ],
   },
 ]

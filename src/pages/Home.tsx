@@ -94,25 +94,25 @@ export default function Home() {
 
       {featured.length > 0 && (
         <section
-          aria-labelledby="recent-heading"
+          aria-labelledby="featured-heading"
           className="border-t border-slate-800/80"
         >
           <div className="mx-auto max-w-6xl py-20 sm:py-28">
             <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
               <div className="max-w-2xl">
                 <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
-                  02 &nbsp;—&nbsp; Recent Work
+                  02 &nbsp;—&nbsp; Current Work
                 </p>
                 <h2
-                  id="recent-heading"
+                  id="featured-heading"
                   className="mt-5 font-display text-4xl font-medium leading-tight tracking-tight text-white sm:text-5xl"
                   style={{ fontVariationSettings: '"opsz" 144' }}
                 >
-                  What I'm building lately.
+                  Featured Project.
                 </h2>
                 <p className="mt-4 text-base leading-relaxed text-slate-400">
-                  A few things I've shipped recently &mdash; full case studies
-                  on the projects page.
+                  The project that best represents my current work. The full
+                  case study is on the projects page.
                 </p>
               </div>
               <Link

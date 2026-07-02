@@ -6,14 +6,11 @@ export function getProjectBySlug(slug: string | undefined): Project | undefined 
   return projects.find((p) => p.slug === slug)
 }
 
-export function getFeaturedProjects(limit = 3): Project[] {
-  return projects.filter((p) => p.featured).slice(0, limit)
+export function getFeaturedProjects(limit?: number): Project[] {
+  const featured = projects.filter((p) => p.featured)
+  return limit ? featured.slice(0, limit) : featured
 }
 
-export function getRecentProjects(): Project[] {
-  return projects.filter((p) => p.featured)
-}
-
-export function getEarlierProjects(): Project[] {
+export function getSelectedProjects(): Project[] {
   return projects.filter((p) => !p.featured)
 }
