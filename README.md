@@ -40,13 +40,6 @@ While building this portfolio, I focused on:
 - Clear project case studies
 - Simple deployment workflow
 
-## Future Improvements
-
-- Add more project case studies
-- Add project screenshots
-- Improve accessibility testing
-- Add automated tests
-
 ## Author
 
 **Ekene Masha**
