@@ -30,6 +30,7 @@ export const projects: Project[] = [
     role: "Solo full-stack developer",
     featured: true,
     leadImage: "traineros/clients-roster.png",
+    leadImageMobile: "traineros/day-picker.jpeg",
     overview:
       "An ASP.NET Core API serving a React SPA from a single App Service, with a separate Function App running the reminder pipeline off a Storage queue, and Postgres on Neon. Sessions are server-side and revocable, data access is scoped so a query for another trainer's client won't compile, and reminder delivery is idempotent through a unique index rather than application logic.",
     problem:

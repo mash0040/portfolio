@@ -25,5 +25,9 @@ export type Project = {
    * panel renders without an image unless a project names one, so an
    * unsuitable portrait screenshot never gets cropped into the wide slot. */
   leadImage?: string
+  /** Portrait/phone counterpart to leadImage, shown below 640px. A landscape
+   * desktop capture is illegible at phone width, so mobile gets its own art
+   * direction. Without this, the panel simply renders no image on mobile. */
+  leadImageMobile?: string
   screenshots?: Screenshot[]
 }

@@ -17,9 +17,15 @@ const displayStyle = { fontVariationSettings: '"opsz" 144' }
  */
 export default function FeaturedProject({ project, as = "h3" }: Props) {
   const Heading = as
-  // Opt-in only: a project has to name a landscape lead image, otherwise the
-  // panel runs without one rather than cropping a portrait screenshot.
-  const lead = project.leadImage ? resolveAsset(project.leadImage) : undefined
+  // Opt-in only: a project has to name its lead images, otherwise the panel
+  // runs without one rather than cropping whatever screenshot came first.
+  // Mobile gets its own art direction because a landscape desktop capture
+  // renders at roughly a quarter scale on a phone and reads as a smudge.
+  const leadWide = project.leadImage ? resolveAsset(project.leadImage) : undefined
+  const leadTall = project.leadImageMobile
+    ? resolveAsset(project.leadImageMobile)
+    : undefined
+  const hasLead = Boolean(leadWide || leadTall)
   const blurb = project.overview ?? project.description
   const meta = [project.year, project.role].filter(Boolean)
 
@@ -71,7 +77,7 @@ export default function FeaturedProject({ project, as = "h3" }: Props) {
         </ul>
       )}
 
-      <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm">
+      <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm sm:gap-x-7">
         <Link
           to={`/projects/${project.slug}`}
           className="group inline-flex items-center gap-2 font-medium text-white focus-visible:outline-none"
@@ -128,19 +134,32 @@ export default function FeaturedProject({ project, as = "h3" }: Props) {
         )}
       </div>
 
-      {lead && (
+      {hasLead && (
         <Link
           to={`/projects/${project.slug}`}
           tabIndex={-1}
           aria-hidden="true"
-          className="mt-12 hidden max-w-3xl border border-slate-800 transition-colors hover:border-slate-600 sm:block"
+          className={`mt-12 max-w-3xl border border-slate-800 transition-colors hover:border-slate-600 ${
+            // With no phone capture there is nothing legible to show on mobile,
+            // so the slot collapses below sm rather than printing a smudge.
+            leadTall ? "block" : "hidden sm:block"
+          }`}
         >
-          <img
-            src={lead}
-            alt=""
-            loading="lazy"
-            className="block aspect-[2/1] w-full object-cover object-top"
-          />
+          <picture>
+            {leadWide && leadTall && (
+              <source media="(min-width: 640px)" srcSet={leadWide} />
+            )}
+            <img
+              src={leadTall ?? leadWide}
+              alt=""
+              loading="lazy"
+              className={
+                leadTall
+                  ? "block aspect-3/4 w-full object-cover object-top sm:aspect-2/1"
+                  : "block aspect-2/1 w-full object-cover object-top"
+              }
+            />
+          </picture>
         </Link>
       )}
     </article>

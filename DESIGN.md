@@ -257,7 +257,12 @@ A single non-shadow ambient effect exists: a 20%-opacity Spot Cyan radial gradie
 
 The lead project is **not** a card. A single card stranded in a multi-column grid reads as a rendering fault, so the featured slot drops the panel entirely and sets the project at full measure: meta line (year `·` role) in mono caps, the title at Headline rank as a link, the project's `overview` at Body Large capped to `max-w-2xl`, the tech tag list, then three ghost links (Read case study, View live, View code). No border, no fill; the surrounding whitespace is the container.
 
-An optional landscape `leadImage` follows at `max-w-3xl` inside a Stockroom Slate hairline, cropped to `aspect-video` from the top. It is opt-in per project: a project that does not name one renders without an image, so a portrait screenshot never gets cropped into the wide slot.
+An optional lead image follows at `max-w-3xl` inside a Stockroom Slate hairline, art-directed per breakpoint through a `<picture>`:
+
+- **`leadImage`** (landscape, desktop capture) above 640px, cropped `aspect-2/1` from the top.
+- **`leadImageMobile`** (portrait, phone capture) below 640px, cropped `aspect-3/4` from the top.
+
+Both are opt-in per project. A landscape desktop capture in a 327px phone column renders near a quarter scale and reads as a smudge, so mobile gets its own capture or no image at all: a project naming only `leadImage` collapses the slot below `sm` rather than printing something illegible. `<picture>` means only the matching file is fetched.
 
 ### Project Grid
 
