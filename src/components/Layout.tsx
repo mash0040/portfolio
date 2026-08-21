@@ -14,7 +14,13 @@ export default function Layout() {
         Skip to content
       </a>
       <Navbar />
-      <main id="main-content" tabIndex={-1} className="flex-1 px-6 outline-none">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        /* scroll-mt clears the sticky nav so the skip link doesn't drop the
+           top of the content underneath it. */
+        className="flex-1 scroll-mt-20 px-6 outline-none"
+      >
         <Outlet />
       </main>
       <Footer />

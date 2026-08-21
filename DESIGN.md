@@ -6,8 +6,8 @@ colors:
   ink-stockroom: "#1e293b"
   ink-galley: "#334155"
   ink-hairline: "#475569"
-  caption: "#64748b"
-  hush: "#94a3b8"
+  rule: "#64748b"
+  label: "#94a3b8"
   copy: "#cbd5e1"
   copy-emphasis: "#e2e8f0"
   page: "#ffffff"
@@ -59,6 +59,7 @@ typography:
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: "0.25em"
+    color: "{colors.label}"
   micro:
     fontFamily: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
     fontSize: "0.6875rem"
@@ -116,17 +117,17 @@ components:
     textColor: "{colors.copy}"
   eyebrow:
     backgroundColor: "transparent"
-    textColor: "{colors.caption}"
+    textColor: "{colors.label}"
     typography: "{typography.label}"
     padding: "0"
   status-pill:
     backgroundColor: "transparent"
-    textColor: "{colors.hush}"
+    textColor: "{colors.label}"
     typography: "{typography.label}"
     padding: "0"
   nav-link:
     backgroundColor: "transparent"
-    textColor: "{colors.hush}"
+    textColor: "{colors.label}"
     rounded: "{rounded.sm}"
     padding: "0.125rem 0.25rem"
     typography: "{typography.body-small}"
@@ -179,17 +180,19 @@ The ink scale runs from canvas to page, tinted toward the spot cyan's blue famil
 - **Stockroom Slate** (`#1e293b`): Section dividers, base card border. The first edge that registers above the canvas.
 - **Galley Stone** (`#334155`): The underline-link rest border, the bordered-button border. The mid-weight rule.
 - **Hairline Stone** (`#475569`): Card border in hover state, link arrow rest color.
-- **Caption Grey** (`#64748b`): Mono eyebrows, dot separators between tech tags, list markers, the `01 — Section` numbers.
-- **Quiet Grey** (`#94a3b8`): Inactive nav text, secondary body. The text rank just below body.
+- **Rule Grey** (`#64748b`): Decoration only. Dot separators between tech tags, list markers, chasing arrows. Measures 4.23:1 on Pressroom Black, which is below AA, so it is never used for text that carries meaning. Every element painted in it is `aria-hidden`.
+- **Label Grey** (`#94a3b8`): Mono eyebrows, section numbers, tech tags, inactive nav, secondary body. The lowest rank allowed to carry information. Measures 7.95:1 on Pressroom Black.
 - **Body Newsprint** (`#cbd5e1`): Default body text on Pressroom Black. Comfortable read at 16-18px.
 - **Emphasis Newsprint** (`#e2e8f0`): Bordered-button text, slightly elevated body emphasis.
 - **Page White** (`#ffffff`): Headlines and active hover ink. The brightest stop, used sparingly.
 
 ### Named Rules
 
+**The AA Floor Rule.** Any text a reader needs to read sits at Label Grey (`#94a3b8`) or brighter. Rule Grey (`#64748b`) reads at 4.23:1 and fails WCAG AA at every size the system uses, so it is reserved for `aria-hidden` decoration. Hierarchy below body rank is carried by typeface and case (mono uppercase vs sans sentence case), not by dimming text past the contrast floor.
+
 **The Single-Ink Rule.** One canvas, one ink scale tinted toward blue. Pressroom Black through Page White; no warm grays, no decorative tints. If a surface seems to need another color, it is wrong about its job.
 
-**The Spot Color Rule.** Spot Cyan covers ≤10% of any page. Its rarity is the signal. Hero CTA, active-nav underline, focus rings, the 14% radial wash on the hero. Never decorative, never duplicated as a "secondary accent."
+**The Spot Color Rule.** Spot Cyan covers ≤10% of any page. Its rarity is the signal. Hero CTA, active-nav underline, focus rings, the 20% radial wash on the hero. Never decorative, never duplicated as a "secondary accent."
 
 **The Signal Green Rule.** Proof Green appears only as a state indicator, never as a fill or text color for non-status content. If it shows up, something is being signaled.
 
@@ -208,9 +211,9 @@ Site-wide `font-feature-settings: "ss01", "cv11"` is on at the html root.
 - **Headline** (Fraunces 500, `clamp(1.875rem, 4vw, 3rem)`, line-height 1.1, `opsz 144`): Big page-section H2 (About sub-section heads, Projects "Recent" and "Earlier" titles).
 - **Title** (Fraunces 500, `1.5rem` to `1.65rem`, line-height 1.2, `opsz 144`): Project card titles, sub-section H3 (e.g. About `02 — Experience` head).
 - **Body Large** (sans 400, `1.125rem`, line-height 1.65, color Body Newsprint): Hero tagline, project description on detail page. Capped at the same line-length as Body.
-- **Body** (sans 400, `1rem`, line-height 1.65, color Body Newsprint): Default body. Cap line length 65–75ch, which the 12-column grid's `col-span-9 max-w-3xl` lands on naturally.
+- **Body** (sans 400, `1rem`, line-height 1.65, color Body Newsprint): Default body. Cap line length 65–75ch. Note that `col-span-9` alone does **not** land on this: inside `max-w-3xl` it gives ~74ch (ProjectDetails), but inside `max-w-6xl` it gives ~98ch. Prose in a `max-w-6xl` section needs an explicit `max-w-xl` on the text block (About).
 - **Body Small** (sans 400, `0.875rem`, line-height 1.5): Secondary copy under section heads, project card description.
-- **Label** (mono 400, `0.75rem`, uppercase, `0.25em` letter-spacing, Caption Grey): Section eyebrows, footer caption, status pill text. The editorial signature.
+- **Label** (mono 400, `0.75rem`, uppercase, `0.25em` letter-spacing, Label Grey): Section eyebrows, footer caption, status pill text. The editorial signature.
 - **Micro** (mono 400, `0.6875rem` / 11px, uppercase, `0.075em` letter-spacing): Project card year, tech tags, repo/live actions on cards.
 
 ### Named Rules
@@ -225,13 +228,15 @@ Site-wide `font-feature-settings: "ss01", "cv11"` is on at the html root.
 
 Flat. No shadows on any element, in any state. Depth is communicated by border weight and color shift, not by light.
 
-A single non-shadow ambient effect exists: a 14%-opacity Spot Cyan radial gradient washed over the upper-left of the hero, masked with a soft radial falloff. It is not elevation; it is a stage light, and it appears nowhere else on the site.
+A single non-shadow ambient effect exists: a 20%-opacity Spot Cyan radial gradient washed over the upper-left of the hero, masked with a soft radial falloff. It is not elevation; it is a stage light, and it appears nowhere else on the site.
 
 ### Named Rules
 
+**The Z-Scale Rule.** Three layers only, and they must stay in this order: sticky nav `z-40`, screenshot lightbox and skip link `z-50`. Nothing else in the system takes a z-index above `z-10` (the project card's action row, which sits over the card's full-bleed overlay link). No arbitrary values.
+
 **The Flat-By-Default Rule.** Surfaces are flat at rest. State changes communicate via border color (Stockroom Slate `#1e293b` to Hairline Stone `#475569`), text color (Quiet Grey to Page White), or position (`translate-x-0.5` on link arrows). No `box-shadow` is used on any component. If a card seems to need lift, the border color brightens, never a drop shadow.
 
-**The One Glow Rule.** The hero's radial Spot Cyan wash is the only ambient color effect on the site. No glows on cards, no auras under buttons, no backdrop-filter anywhere. Adding a second glow breaks the system.
+**The One Glow Rule.** The hero's radial Spot Cyan wash is the only ambient color effect on the site. No glows on cards, no auras under buttons, no backdrop-filter anywhere. Adding a second glow breaks the system. The screenshot lightbox obeys this: its backdrop is flat Pressroom Black at 95% with no blur, and the image is bounded by a Stockroom Slate hairline rather than a drop shadow.
 
 ## 5. Components
 
@@ -248,13 +253,23 @@ A single non-shadow ambient effect exists: a 14%-opacity Spot Cyan radial gradie
 - **Why squared corners.** Rounded card grids are the SaaS template signature. Squaring them is structural, not stylistic. A magazine card is a panel, not a chip.
 - **Internal hierarchy.** Year micro-label (mono uppercase) → Title-rank h2 → 3-line clamp description → tech-tag list with `·` separators → chasing arrow at the bottom-right that translates on hover.
 
+### Featured Project Panel (signature)
+
+The lead project is **not** a card. A single card stranded in a multi-column grid reads as a rendering fault, so the featured slot drops the panel entirely and sets the project at full measure: meta line (year `·` role) in mono caps, the title at Headline rank as a link, the project's `overview` at Body Large capped to `max-w-2xl`, the tech tag list, then three ghost links (Read case study, View live, View code). No border, no fill; the surrounding whitespace is the container.
+
+An optional landscape `leadImage` follows at `max-w-3xl` inside a Stockroom Slate hairline, cropped to `aspect-video` from the top. It is opt-in per project: a project that does not name one renders without an image, so a portrait screenshot never gets cropped into the wide slot.
+
+### Project Grid
+
+Two columns at most (`repeat(auto-fit, minmax(min(100%, 28rem), 1fr))`), never three. A trailing odd card spans the full measure via `li:last-child:nth-child(odd)`, so the grid has no empty tracks at any project count. Three-column grids are banned here: with a realistic portfolio roster they strand one or two dead tracks beside the last row, and dead tracks read as an unfinished page rather than as editorial whitespace.
+
 ### Inputs / Fields
 
 The current site has no form inputs. When introduced, follow the bordered-button shape: Galley Stone border, Pressroom Black fill, Body Newsprint text, `0.625rem 1rem` padding, `6px` radius, focus ring Tint Cyan with Pressroom Black ring offset. Never rounded-full pill inputs; never a stacked icon.
 
 ### Navigation
 
-- **Primary nav.** Top-aligned, full-width, `border-b Stockroom Slate`, Pressroom Black fill. Display logotype set in Fraunces on the left (`text-lg font-medium tracking-tight`); text links on the right (`text-sm font-medium`).
+- **Primary nav.** Top-aligned, full-width, `border-b Stockroom Slate`, Pressroom Black fill. **Sticky** (`sticky top-0 z-40`), so a reader deep in a case study can move between pages without scrolling back up. The fill is solid canvas, never translucent: case-study screenshots are bright white and a see-through bar over them is unreadable, and `backdrop-filter` is banned system-wide anyway. `main` carries `scroll-mt-20` so the skip link does not land content under the bar. Display logotype set in Fraunces on the left (`text-lg font-medium tracking-tight`); text links on the right (`text-sm font-medium`).
 - **States.** Inactive: Quiet Grey, no underline. Hover: Quiet Grey to Page White. Active: Page White text with a `border-b-2 Press Cyan pb-0.5` underline that's the same width as the link itself. The active underline is the only place Press Cyan appears as a 2px rule.
 - **Mobile.** A hamburger button toggles a vertical menu under the bar. No drawer, no overlay; the menu pushes content down. Escape closes.
 - **Skip link.** A `focus:not-sr-only` "Skip to content" pill, Spot Cyan fill, Page White text. WCAG-mandated; visually consistent with the primary CTA.
@@ -263,8 +278,8 @@ The current site has no form inputs. When introduced, follow the bordered-button
 
 The single most distinctive component. Used on every long-form page: Home, About, Projects, ProjectDetails. Two-tier label.
 - **Eyebrow:** mono uppercase `0.75rem` with `0.25em` letter-spacing in Caption Grey.
-- **Number:** the leading `01`, `02`, etc. set in Quiet Grey, one rank brighter than the rest of the label.
-- **Format:** `01 [non-breaking space] — [non-breaking space] Stack`. Note: the surrounding `&nbsp;` and the em-dash are part of the editorial signature here. (Tension worth flagging: the impeccable shared design laws ban em-dashes in copy. This use is in the label component, not narrative copy. If the dash must go, replace with a thin pipe `|` or middle dot `·`. Don't downgrade to a hyphen.)
+- **Number:** the leading `01`, `02`, etc. set in Body Newsprint, one rank brighter than the rest of the label.
+- **Format:** `01 [non-breaking space] · [non-breaking space] Stack`. The separator is the middle dot, matching the glyph already used between tech tags. (Resolved tension: this previously used an em-dash, which the impeccable shared design laws ban. The middle dot was the documented fallback and is now the standard.)
 - **Companion.** On About and ProjectDetails, the eyebrow lives in `col-span-3` of a 12-col grid, with section content in `col-span-9`. The grid IS the layout doctrine.
 
 ### Status Pill (signature)
@@ -284,14 +299,18 @@ A horizontal mono list with `·` middle dot separators between items (rendered a
 - **Do** follow the `max-w-6xl px-6` container and `py-20 sm:py-28` section padding for vertical rhythm.
 - **Do** apply the 12-col `col-span-3 / col-span-9` magazine grid on About and ProjectDetails section bodies. That is where the "magazine front" lives.
 - **Do** keep the Project Card squared (`rounded-none`). The border is the card.
+- **Do** keep every information-bearing text at Label Grey (`#94a3b8`) or brighter. Rule Grey is `aria-hidden` decoration only.
+- **Do** give the featured project the full measure as a panel, not a card in a grid.
 - **Do** chase every link with an arrow → that translates `0.5px` on hover and brightens from Hairline Stone to Page White.
 - **Do** respect `prefers-reduced-motion`: collapse all transitions to instantaneous on the few transitions in the system.
 
 ### Don't:
 - **Don't** add purple, magenta, or any second accent. Spot Cyan is the only color the site is allowed to feel. (Carries PRODUCT.md anti-reference: brittanychiang.com clone aesthetic.)
-- **Don't** add a sticky scroll-spy sidebar with section indicators. That is the brittanychiang.com clone signature; refused on sight.
+- **Don't** add a sticky scroll-spy sidebar with section indicators. That is the brittanychiang.com clone signature; refused on sight. (The sticky *top* nav is a different thing and is deliberate: it is plain wayfinding, with no scroll position tracking, no active-section highlighting, and no sidebar. Don't remove it under this rule.)
 - **Don't** lay out skills as an icon grid. The list-with-mono-labels in About is the format. Icons are forbidden in skill display. (Carries PRODUCT.md anti-reference: AI SaaS landing template.)
 - **Don't** use identical card grids beyond the Project Card itself. The site has one card pattern; introducing another is the AI-SaaS template tell.
+- **Don't** run the project grid at three columns, and don't leave a lone card in a multi-column track. Cap at two and let a trailing odd card span.
+- **Don't** set labels, captions, or tech tags in Rule Grey (`#64748b`). It fails WCAG AA at every size the system uses.
 - **Don't** use `box-shadow` anywhere. The system is flat. If you reach for a shadow, the answer is a border-color shift.
 - **Don't** use `background-clip: text` with a gradient on headlines or anywhere else. Gradient text is banned.
 - **Don't** use `border-left` or `border-right` greater than 1px as a colored stripe on cards, callouts, or list items. Side stripes are forbidden by the impeccable shared design laws.

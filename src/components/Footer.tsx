@@ -3,7 +3,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-slate-800">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-6 text-sm text-slate-400">
-        <span className="font-mono text-xs tracking-tight text-slate-500">
+        <span className="font-mono text-xs tracking-tight text-slate-400">
           © 2024–{currentYear} &nbsp;·&nbsp; Ekene Masha
         </span>
         <div className="flex gap-5">

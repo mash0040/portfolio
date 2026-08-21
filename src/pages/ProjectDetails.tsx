@@ -1,20 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { getProjectBySlug } from "../utils/projects"
-
-// Resolves any image under src/assets/* at build time. Screenshot entries
-// referencing files that don't exist yet are silently skipped, so the page
-// renders fine even before the actual screenshot files are dropped in.
-const assetUrls = import.meta.glob(
-  "../assets/**/*.{png,jpg,jpeg,webp,gif,svg}",
-  { eager: true, query: "?url", import: "default" },
-) as Record<string, string>
-
-function resolveAsset(relPath: string): string | undefined {
-  return assetUrls[`../assets/${relPath}`]
-}
-
-type ResolvedShot = { src: string; url: string; alt: string; caption?: string }
+import { resolveScreenshots, type ResolvedShot } from "../utils/assets"
+import { usePageMeta } from "../utils/usePageMeta"
+import { NOT_FOUND_META, projectPageMeta } from "../utils/seo"
 
 type Section =
   | { kind: "paragraph"; heading: string; body: string }
@@ -26,6 +15,10 @@ const displayStyle = { fontVariationSettings: '"opsz" 144' }
 export default function ProjectDetails() {
   const { slug } = useParams<{ slug: string }>()
   const project = getProjectBySlug(slug)
+
+  // Called unconditionally: the not-found branch below returns early, so the
+  // hook order has to be identical on both paths.
+  usePageMeta(project ? projectPageMeta(project) : NOT_FOUND_META)
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const triggerRefs = useRef<Array<HTMLButtonElement | null>>([])
@@ -69,7 +62,7 @@ export default function ProjectDetails() {
     return (
       <div className="mx-auto max-w-6xl py-20 sm:py-28">
         <div className="border border-dashed border-slate-800 px-6 py-20 text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-400">
             404
           </p>
           <h1
@@ -95,12 +88,7 @@ export default function ProjectDetails() {
     )
   }
 
-  const screenshots: ResolvedShot[] = (project.screenshots ?? [])
-    .map((shot) => {
-      const url = resolveAsset(shot.src)
-      return url ? { ...shot, url } : null
-    })
-    .filter((shot): shot is ResolvedShot => shot !== null)
+  const screenshots: ResolvedShot[] = resolveScreenshots(project.screenshots)
   const activeShot = lightboxIndex !== null ? screenshots[lightboxIndex] ?? null : null
 
   const sections: Section[] = []
@@ -147,7 +135,7 @@ export default function ProjectDetails() {
       </Link>
 
       <header className="mt-12 max-w-3xl">
-        <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-400">
           Case Study
         </p>
         <h1
@@ -164,13 +152,13 @@ export default function ProjectDetails() {
           <dl className="mt-8 grid grid-cols-2 gap-x-8 gap-y-3 border-t border-slate-800 pt-6 font-mono text-xs uppercase tracking-widest sm:max-w-md sm:grid-cols-[auto_1fr]">
             {project.year && (
               <>
-                <dt className="text-slate-500">Year</dt>
+                <dt className="text-slate-400">Year</dt>
                 <dd className="text-slate-300">{project.year}</dd>
               </>
             )}
             {project.role && (
               <>
-                <dt className="text-slate-500">Role</dt>
+                <dt className="text-slate-400">Role</dt>
                 <dd className="text-slate-300">{project.role}</dd>
               </>
             )}
@@ -181,12 +169,12 @@ export default function ProjectDetails() {
           <ul className="mt-6 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px] tracking-tight text-slate-400">
             {project.tech.map((t, i) => (
               <li key={t} className="flex items-center gap-3">
-                {i > 0 && (
-                  <span aria-hidden="true" className="text-slate-700">
+                <span>{t}</span>
+                {i < project.tech.length - 1 && (
+                  <span aria-hidden="true" className="text-slate-500">
                     ·
                   </span>
                 )}
-                <span>{t}</span>
               </li>
             ))}
           </ul>
@@ -238,15 +226,22 @@ export default function ProjectDetails() {
             )}
 
             {sections.map((section, i) => (
-              <section key={section.heading} className="grid gap-2 sm:grid-cols-12">
+              <section
+                key={section.heading}
+                aria-labelledby={`section-${section.heading}`}
+                className="grid gap-2 sm:grid-cols-12"
+              >
                 <div className="sm:col-span-3">
-                  <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-400">
-                    <span className="text-slate-400">
+                  <h2
+                    id={`section-${section.heading}`}
+                    className="font-mono text-xs font-normal uppercase tracking-[0.25em] text-slate-400"
+                  >
+                    <span className="text-slate-300">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    &nbsp;—&nbsp;
+                    &nbsp;·&nbsp;
                     {section.heading}
-                  </p>
+                  </h2>
                 </div>
                 <div className="sm:col-span-9">
                   {section.kind === "paragraph" ? (
@@ -254,7 +249,7 @@ export default function ProjectDetails() {
                       {section.body}
                     </p>
                   ) : section.kind === "list" ? (
-                    <ul className="list-disc space-y-3 pl-5 text-base leading-relaxed text-slate-300 marker:text-slate-600">
+                    <ul className="list-disc space-y-3 pl-5 text-base leading-relaxed text-slate-300 marker:text-slate-500">
                       {section.items.map((item) => (
                         <li key={item}>{item}</li>
                       ))}
@@ -295,15 +290,21 @@ export default function ProjectDetails() {
             ))}
 
             {hasLinks && (
-              <section className="grid gap-2 sm:grid-cols-12">
+              <section
+                aria-labelledby="section-links"
+                className="grid gap-2 sm:grid-cols-12"
+              >
                 <div className="sm:col-span-3">
-                  <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-400">
-                    <span className="text-slate-400">
+                  <h2
+                    id="section-links"
+                    className="font-mono text-xs font-normal uppercase tracking-[0.25em] text-slate-400"
+                  >
+                    <span className="text-slate-300">
                       {String(sections.length + 1).padStart(2, "0")}
                     </span>
-                    &nbsp;—&nbsp;
+                    &nbsp;·&nbsp;
                     Links
-                  </p>
+                  </h2>
                 </div>
                 <div className="sm:col-span-9">
                   <ul className="space-y-4">
@@ -315,7 +316,7 @@ export default function ProjectDetails() {
                           rel="noopener noreferrer"
                           className="group flex items-baseline gap-4 text-sm"
                         >
-                          <span className="w-14 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-500">
+                          <span className="w-14 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-400">
                             Live
                           </span>
                           <span className="wrap-break-word border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
@@ -332,7 +333,7 @@ export default function ProjectDetails() {
                           rel="noopener noreferrer"
                           className="group flex items-baseline gap-4 text-sm"
                         >
-                          <span className="w-14 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-500">
+                          <span className="w-14 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-400">
                             Code
                           </span>
                           <span className="wrap-break-word border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
@@ -360,7 +361,7 @@ export default function ProjectDetails() {
             // also lets us drop the stopPropagation on the image.
             if (e.target === e.currentTarget) closeLightbox()
           }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 p-4 backdrop-blur-sm sm:p-8"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/95 p-4 sm:p-8"
         >
           <button
             ref={closeBtnRef}
@@ -374,7 +375,7 @@ export default function ProjectDetails() {
           <img
             src={activeShot.url}
             alt={activeShot.alt}
-            className="max-h-[90vh] max-w-[95vw] rounded-md object-contain shadow-2xl"
+            className="max-h-[90vh] max-w-[95vw] rounded-md border border-slate-800 object-contain"
           />
         </div>
       )}

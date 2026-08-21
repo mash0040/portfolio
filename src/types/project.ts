@@ -21,5 +21,9 @@ export type Project = {
   challenges?: string
   improvements?: string[]
   learnings?: string[]
+  /** Landscape image used as the lead in the featured panel. Opt-in: the
+   * panel renders without an image unless a project names one, so an
+   * unsuitable portrait screenshot never gets cropped into the wide slot. */
+  leadImage?: string
   screenshots?: Screenshot[]
 }

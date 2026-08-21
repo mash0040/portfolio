@@ -9,3 +9,17 @@
 html {
   font-feature-settings: "ss01", "cv11";
 }
+
+/* The system's motion is feedback only, so it all collapses to instant when
+   the reader has asked for reduced motion. Nothing here carries meaning that
+   the transition itself is responsible for communicating. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

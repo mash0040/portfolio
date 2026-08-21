@@ -31,20 +31,51 @@ This runs `tsc -b && vite build`. Catches type errors and build-time bundling is
 
 After build, verify:
 
-- All images referenced in `src/data/projects.ts` (any `liveUrl`, `repoUrl`, screenshots) resolve. Use the Read tool to spot-check.
+- All images referenced in `src/data/projects.ts` (any `liveUrl`, `repoUrl`, screenshots, `leadImage`) resolve. Use the Read tool to spot-check.
 - `src/assets/` files referenced by components actually exist.
 - `public/favicon.svg` and `public/icons.svg` are still present.
+- **Every `href` pointing at a `public/` file resolves to a real file.** A missing target does not 404 in dev: Vite's SPA fallback returns `index.html` with a 200, so a broken download silently hands the user an HTML file with the wrong extension. Check it mechanically rather than by eye:
+
+```bash
+# every /-rooted href in src/ that is not a router path, matched against public/
+grep -rhoE 'href="/[^"]+\.[a-z0-9]+"' src/ | sed -E 's/href="\/(.*)"//' | sort -u |   while read -r f; do [ -f "public/$f" ] || echo "MISSING: public/$f"; done
+```
+
+  This is the check that would have caught `href="/resume.pdf"` while the file on disk was `public/Ekene_Masha_Resume.pdf`.
 
 ### 4. Router preview
 
 Confirm every route declared in `src/App.tsx` has a corresponding page component that exports default. Routes:
 
 - `/` → Home
+- `/about` → About
 - `/projects` → Projects
 - `/projects/:slug` → ProjectDetails
 - `/contact` → Contact
 
-### 5. Report
+### 5. Prerendered routes and metadata
+
+`vite.config.ts` emits one HTML file per route so that deep links resolve and
+link-preview crawlers (which do not run JS) see real per-page metadata. Verify
+after the build that every route produced a file with its own title:
+
+```bash
+find dist -name index.html -o -name 404.html | sort
+for f in $(find dist -name index.html -o -name 404.html | sort); do
+  printf '%-42s %s
+' "$f" "$(grep -oE '<title>[^<]*' "$f" | sed 's/<title>//')"
+done
+```
+
+Every title must be distinct. If two routes share the homepage title, the
+rewriter in `vite.config.ts` stopped matching `index.html` and the build should
+have thrown; investigate rather than shipping.
+
+**A route in `src/App.tsx` that is missing from `STATIC_PAGE_META` in
+`src/utils/seo.ts` gets no prerendered file** and will 404 on a cold load. Check
+the two lists against each other whenever a route is added.
+
+### 6. Report
 
 Output a short checklist:
 
@@ -53,6 +84,7 @@ Output a short checklist:
 ✓ build
 ✓ assets
 ✓ routes
+✓ prerender (7 routes + 404, all titles distinct)
 Ready to push.
 ```
 

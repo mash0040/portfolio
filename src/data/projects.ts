@@ -29,6 +29,7 @@ export const projects: Project[] = [
     year: 2026,
     role: "Solo full-stack developer",
     featured: true,
+    leadImage: "traineros/clients-roster.png",
     overview:
       "An ASP.NET Core API serving a React SPA from a single App Service, with a separate Function App running the reminder pipeline off a Storage queue, and Postgres on Neon. Sessions are server-side and revocable, data access is scoped so a query for another trainer's client won't compile, and reminder delivery is idempotent through a unique index rather than application logic.",
     problem:
@@ -161,18 +162,18 @@ export const projects: Project[] = [
         src: "plant-plotter/planner.png",
         alt: "Plant Plotter visual planner with plants placed on a numbered garden grid",
         caption:
-          "Visual planner — plants placed on a grid that persists to the API.",
+          "Visual planner: plants placed on a grid that persists to the API.",
       },
       {
         src: "plant-plotter/my-gardens.png",
         alt: "Plant Plotter My Gardens dashboard listing user-created gardens",
-        caption: "My Gardens — multi-garden dashboard, per user.",
+        caption: "My Gardens: multi-garden dashboard, per user.",
       },
       {
         src: "plant-plotter/garden-details.png",
         alt: "Plant Plotter garden details overview page",
         caption:
-          "Garden details — overview, plants, analytics, and settings in one view.",
+          "Garden details: overview, plants, analytics, and settings in one view.",
       },
       {
         src: "plant-plotter/companion-guide.png",
@@ -183,12 +184,12 @@ export const projects: Project[] = [
         src: "plant-plotter/tracker.png",
         alt: "Plant Plotter tracker showing a calendar of garden care tasks",
         caption:
-          "Tracker — calendar, today's tasks, overdue tasks, and weather context.",
+          "Tracker: calendar, today's tasks, overdue tasks, and weather context.",
       },
       {
         src: "plant-plotter/landing-page.png",
         alt: "Plant Plotter public landing page",
-        caption: "Landing page — public marketing entry point.",
+        caption: "Landing page: public marketing entry point.",
       },
     ],
   },

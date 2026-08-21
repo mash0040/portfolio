@@ -1,3 +1,6 @@
+import { usePageMeta } from "../utils/usePageMeta";
+import { CONTACT_META } from "../utils/seo";
+
 const contactMethods: {
   label: string;
   value: string;
@@ -24,10 +27,12 @@ const contactMethods: {
 ];
 
 export default function Contact() {
+  usePageMeta(CONTACT_META);
+
   return (
     <div className="mx-auto max-w-6xl py-20 sm:py-28">
       <header className="max-w-3xl">
-        <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-400">
           Contact
         </p>
         <h1
@@ -38,18 +43,24 @@ export default function Contact() {
         </h1>
         <p className="mt-7 text-base leading-relaxed text-slate-300 sm:text-lg">
           The fastest way to reach me is by email. I'm also on GitHub and
-          LinkedIn &mdash; happy to chat about work, collaboration, or
+          LinkedIn, and happy to chat about work, collaboration, or
           interesting bugs.
         </p>
       </header>
 
-      <div className="mt-16 grid gap-2 border-t border-slate-800/80 pt-16 sm:mt-20 sm:grid-cols-12 sm:pt-20">
+      <section
+        aria-labelledby="channels-heading"
+        className="mt-16 grid gap-2 border-t border-slate-800/80 pt-16 sm:mt-20 sm:grid-cols-12 sm:pt-20"
+      >
         <div className="sm:col-span-3">
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
-            <span className="text-slate-400">01</span>
-            &nbsp;—&nbsp;
+          <h2
+            id="channels-heading"
+            className="font-mono text-xs font-normal uppercase tracking-[0.25em] text-slate-400"
+          >
+            <span className="text-slate-300">01</span>
+            &nbsp;·&nbsp;
             Channels
-          </p>
+          </h2>
         </div>
         <div className="sm:col-span-9">
           <ul role="list" className="divide-y divide-slate-800 border-y border-slate-800">
@@ -62,7 +73,7 @@ export default function Contact() {
                     : {})}
                   className="group flex items-baseline gap-6 py-5 text-base focus-visible:outline-none"
                 >
-                  <span className="w-24 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-500">
+                  <span className="w-24 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-400">
                     {method.label}
                   </span>
                   <span className="break-all font-medium text-white transition-colors group-hover:text-slate-200 group-focus-visible:underline group-focus-visible:underline-offset-4">
@@ -73,7 +84,7 @@ export default function Contact() {
                   </span>
                   <span
                     aria-hidden="true"
-                    className="ml-auto text-slate-600 transition-all group-hover:translate-x-0.5 group-hover:text-white"
+                    className="ml-auto text-slate-500 transition-all group-hover:translate-x-0.5 group-hover:text-white"
                   >
                     →
                   </span>
@@ -83,7 +94,7 @@ export default function Contact() {
           </ul>
 
           <a
-            href="/resume.pdf"
+            href="/Ekene_Masha_Resume.pdf"
             download
             className="group mt-10 inline-flex items-center gap-2 rounded-md border border-slate-700 px-5 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:border-white hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
@@ -96,11 +107,11 @@ export default function Contact() {
             </span>
           </a>
 
-          <p className="mt-10 font-mono text-xs uppercase tracking-widest text-slate-500">
+          <p className="mt-10 font-mono text-xs uppercase tracking-widest text-slate-400">
             I usually reply within a day or two.
           </p>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

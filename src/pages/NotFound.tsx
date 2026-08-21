@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom"
+import { usePageMeta } from "../utils/usePageMeta"
+import { NOT_FOUND_META } from "../utils/seo"
 
 export default function NotFound() {
+  usePageMeta(NOT_FOUND_META)
+
   return (
     <div className="mx-auto max-w-6xl py-20 sm:py-28">
       <div className="border border-dashed border-slate-800 px-6 py-20 text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-slate-400">
           404
         </p>
         <h1

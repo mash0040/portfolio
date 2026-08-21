@@ -28,7 +28,11 @@ export default function Navbar() {
   return (
     <nav
       aria-label="Primary"
-      className="border-b border-slate-800 bg-slate-950"
+      /* Sticky so a recruiter deep in a case study can switch pages without
+         scrolling back up. Solid canvas fill rather than a translucent blur:
+         the system has no backdrop-filter anywhere. z-40 keeps it under the
+         screenshot lightbox (z-50) and the skip link (z-50). */
+      className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
         <NavLink
