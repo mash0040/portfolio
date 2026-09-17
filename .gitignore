@@ -22,3 +22,19 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local AI guidance and tool configuration (keep on disk, do not commit)
+PRODUCT.md
+product.md
+DESIGN.md
+design.md
+CLAUDE.md
+claude.md
+AGENTS.md
+agents.md
+CONTEXT.md
+context.md
+.claude/
+.impeccable/
+.codex/
+.agents/
