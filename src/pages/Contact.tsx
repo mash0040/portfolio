@@ -62,7 +62,7 @@ export default function Contact() {
             Channels
           </h2>
         </div>
-        <div className="sm:col-span-9">
+        <div className="min-w-0 sm:col-span-9">
           <ul role="list" className="divide-y divide-slate-800 border-y border-slate-800">
             {contactMethods.map((method) => (
               <li key={method.label}>
@@ -71,12 +71,12 @@ export default function Contact() {
                   {...(method.external
                     ? { target: "_blank", rel: "noopener noreferrer" }
                     : {})}
-                  className="group flex items-baseline gap-6 py-5 text-base focus-visible:outline-none"
+                  className="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-3 gap-y-2 py-5 text-base focus-visible:outline-none sm:grid-cols-[6rem_minmax(0,1fr)_auto] sm:gap-x-6"
                 >
-                  <span className="w-24 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-400">
+                  <span className="font-mono text-xs uppercase tracking-widest text-slate-400">
                     {method.label}
                   </span>
-                  <span className="break-all font-medium text-white transition-colors group-hover:text-slate-200 group-focus-visible:underline group-focus-visible:underline-offset-4">
+                  <span className="col-span-2 row-start-2 min-w-0 wrap-anywhere font-medium text-white transition-colors group-hover:text-slate-200 group-focus-visible:underline group-focus-visible:underline-offset-4 sm:col-span-1 sm:col-start-2 sm:row-start-1">
                     {method.value}
                     {method.external && (
                       <span className="sr-only"> (opens in new tab)</span>
@@ -84,7 +84,7 @@ export default function Contact() {
                   </span>
                   <span
                     aria-hidden="true"
-                    className="ml-auto text-slate-500 transition-all group-hover:translate-x-0.5 group-hover:text-white"
+                    className="col-start-2 row-start-1 text-slate-500 transition-all group-hover:translate-x-0.5 group-hover:text-white sm:col-start-3"
                   >
                     →
                   </span>
