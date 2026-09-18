@@ -5,10 +5,11 @@ import { resolveScreenshots, type ResolvedShot } from "../utils/assets"
 import { usePageMeta } from "../utils/usePageMeta"
 import { NOT_FOUND_META, projectPageMeta } from "../utils/seo"
 
-type Section =
+type Section = { id: string } & (
   | { kind: "paragraph"; heading: string; body: string }
   | { kind: "list"; heading: string; items: string[] }
   | { kind: "screenshots"; heading: string; items: ResolvedShot[] }
+)
 
 const displayStyle = { fontVariationSettings: '"opsz" 144' }
 
@@ -93,25 +94,25 @@ export default function ProjectDetails() {
 
   const sections: Section[] = []
   if (project.problem) {
-    sections.push({ kind: "paragraph", heading: "Problem", body: project.problem })
+    sections.push({ id: "section-problem", kind: "paragraph", heading: "Problem", body: project.problem })
   }
   if (project.solution) {
-    sections.push({ kind: "paragraph", heading: "Solution", body: project.solution })
+    sections.push({ id: "section-solution", kind: "paragraph", heading: "Solution", body: project.solution })
   }
   if (project.features && project.features.length > 0) {
-    sections.push({ kind: "list", heading: "Features", items: project.features })
+    sections.push({ id: "section-features", kind: "list", heading: "Features", items: project.features })
   }
   if (screenshots.length > 0) {
-    sections.push({ kind: "screenshots", heading: "Screenshots", items: screenshots })
+    sections.push({ id: "section-screenshots", kind: "screenshots", heading: "Screenshots", items: screenshots })
   }
   if (project.challenges) {
-    sections.push({ kind: "paragraph", heading: "Challenges", body: project.challenges })
+    sections.push({ id: "section-challenges", kind: "paragraph", heading: "Challenges", body: project.challenges })
   }
   if (project.improvements && project.improvements.length > 0) {
-    sections.push({ kind: "list", heading: "What I Improved", items: project.improvements })
+    sections.push({ id: "section-what-i-improved", kind: "list", heading: "What I Improved", items: project.improvements })
   }
   if (project.learnings && project.learnings.length > 0) {
-    sections.push({ kind: "list", heading: "What I Learned", items: project.learnings })
+    sections.push({ id: "section-what-i-learned", kind: "list", heading: "What I Learned", items: project.learnings })
   }
 
   const hasLinks = Boolean(project.repoUrl || project.liveUrl)
@@ -227,13 +228,13 @@ export default function ProjectDetails() {
 
             {sections.map((section, i) => (
               <section
-                key={section.heading}
-                aria-labelledby={`section-${section.heading}`}
+                key={section.id}
+                aria-labelledby={section.id}
                 className="grid gap-2 sm:grid-cols-12"
               >
                 <div className="sm:col-span-3">
                   <h2
-                    id={`section-${section.heading}`}
+                    id={section.id}
                     className="font-mono text-xs font-normal uppercase tracking-[0.25em] text-slate-400"
                   >
                     <span className="text-slate-300">
