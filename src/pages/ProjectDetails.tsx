@@ -306,7 +306,7 @@ export default function ProjectDetails() {
                     Links
                   </h2>
                 </div>
-                <div className="sm:col-span-9">
+                <div className="min-w-0 sm:col-span-9">
                   <ul className="space-y-4">
                     {project.liveUrl && (
                       <li>
@@ -314,12 +314,12 @@ export default function ProjectDetails() {
                           href={project.liveUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group flex items-baseline gap-4 text-sm"
+                          className="group flex min-w-0 flex-col items-start gap-1 text-sm sm:flex-row sm:items-baseline sm:gap-4"
                         >
                           <span className="w-14 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-400">
                             Live
                           </span>
-                          <span className="wrap-break-word border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
+                          <span className="min-w-0 max-w-full wrap-anywhere border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
                             {project.liveUrl}
                           </span>
                         </a>
@@ -331,12 +331,12 @@ export default function ProjectDetails() {
                           href={project.repoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group flex items-baseline gap-4 text-sm"
+                          className="group flex min-w-0 flex-col items-start gap-1 text-sm sm:flex-row sm:items-baseline sm:gap-4"
                         >
                           <span className="w-14 shrink-0 font-mono text-xs uppercase tracking-widest text-slate-400">
                             Code
                           </span>
-                          <span className="wrap-break-word border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
+                          <span className="min-w-0 max-w-full wrap-anywhere border-b border-slate-700 pb-0.5 font-medium text-white transition-colors group-hover:border-white">
                             {project.repoUrl}
                           </span>
                         </a>
