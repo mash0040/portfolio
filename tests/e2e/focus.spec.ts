@@ -26,6 +26,55 @@ test('client navigation moves focus to the new page content', async ({ page }) =
     const active = document.activeElement
     return active?.matches('main, main h1') ?? false
   }), { message: 'New page should focus main or its heading' }).toBe(true)
+  await page.keyboard.press('Tab')
+  await expect.poll(() => page.getByRole('main').evaluate(el => el.contains(document.activeElement))).toBe(true)
+})
+
+for (const path of ['/', '/projects/traineros']) {
+  test(`${path}: initial load and reload keep the skip link first in keyboard order`, async ({ page }) => {
+    await page.goto(path)
+    for (let load = 0; load < 2; load++) {
+      if (load) await page.reload()
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+      await expect(page.getByRole('main')).not.toBeFocused()
+      await page.keyboard.press('Tab')
+      await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused()
+    }
+  })
+}
+
+test('Back and Forward focus the destination content and allow keyboard navigation', async ({ page }) => {
+  await page.goto('/')
+  await tabTo(page, page.getByRole('link', { name: 'View projects', exact: true }))
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/\/projects$/)
+  await expect(page.getByRole('main')).toBeFocused()
+
+  await page.goBack()
+  await expect(page).toHaveURL(/\/$/)
+  await expect(page.getByRole('main')).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('link', { name: 'Listen to the pronunciation of Ekene' })).toBeFocused()
+
+  await page.goForward()
+  await expect(page).toHaveURL(/\/projects$/)
+  await expect(page.getByRole('main')).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect.poll(() => page.getByRole('main').evaluate(el => el.contains(document.activeElement))).toBe(true)
+})
+
+test('same-page history keeps focus on the skip-link destination', async ({ page }) => {
+  await page.goto('/')
+  await page.keyboard.press('Tab')
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/#main-content$/)
+  await expect(page.getByRole('main')).toBeFocused()
+  await page.goBack()
+  await expect(page).toHaveURL(/\/$/)
+  await expect(page.getByRole('main')).toBeFocused()
+  await page.goForward()
+  await expect(page).toHaveURL(/#main-content$/)
+  await expect(page.getByRole('main')).toBeFocused()
 })
 
 test.describe('mobile menu', () => {
