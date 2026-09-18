@@ -53,6 +53,10 @@ for (const route of routes) {
 
   test(`${route.path}: accessible region references`, async ({ page }) => {
     await page.goto(route.path)
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    const ids = await page.locator('[id]').evaluateAll(elements => elements.map(el => el.id))
+    expect(ids.filter(id => /\s/.test(id)), 'IDs must not contain whitespace').toEqual([])
+    expect(ids.filter((id, index) => ids.indexOf(id) !== index), 'IDs must be unique').toEqual([])
     const broken = await page.locator('[aria-labelledby]').evaluateAll(elements => elements.flatMap(el =>
       (el.getAttribute('aria-labelledby') || '').split(/\s+/)
         .filter(id => !document.getElementById(id))
@@ -72,6 +76,27 @@ for (const route of routes) {
       }
       await expect.poll(() => image.evaluate(img => (img as HTMLImageElement).naturalWidth),
         { message: `Image failed: ${await image.getAttribute('src')}` }).toBeGreaterThan(0)
+    }
+  })
+}
+
+for (const project of projects) {
+  test(`${project.slug}: multiword sections have accessible names`, async ({ page }) => {
+    await page.goto(`/projects/${project.slug}`)
+    const sections = [
+      { heading: 'What I Improved', present: Boolean(project.improvements?.length) },
+      { heading: 'What I Learned', present: Boolean(project.learnings?.length) },
+    ]
+    for (const { heading, present } of sections) {
+      // The accessible name also includes the section number and separator.
+      const region = page.getByRole('region', { name: new RegExp(heading) })
+      if (present) {
+        await expect(region).toHaveCount(1)
+        await expect(region).toBeVisible()
+        await expect(region.getByRole('heading', { level: 2, name: new RegExp(heading) })).toBeVisible()
+      } else {
+        await expect(region).toHaveCount(0)
+      }
     }
   })
 }
