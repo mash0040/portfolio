@@ -1,4 +1,5 @@
 import type { Project } from "../types/project";
+import screenshotImages from "./screenshot-images.json" with { type: "json" };
 
 export const projects: Project[] = [
   {
@@ -67,36 +68,42 @@ export const projects: Project[] = [
     screenshots: [
       {
         src: "traineros/day-picker.jpeg",
+        ...screenshotImages["traineros/day-picker.jpeg"],
         alt: "TrainerOS client view of today's Upper day with targets and cues",
         caption:
           "The client opens straight into the day they're training.",
       },
       {
         src: "traineros/log-workout.jpeg",
+        ...screenshotImages["traineros/log-workout.jpeg"],
         alt: "TrainerOS logging screen with last time's numbers beside the inputs",
         caption:
           "Progression without remembering, or scrolling back through history.",
       },
       {
         src: "traineros/reminder-email.jpeg",
+        ...screenshotImages["traineros/reminder-email.jpeg"],
         alt: "TrainerOS reminder email on a phone, with a one-tap pause link",
         caption:
           "Goes out on each client's own schedule rather than a global one.",
       },
       {
         src: "traineros/clients-roster.png",
+        ...screenshotImages["traineros/clients-roster.png"],
         alt: "TrainerOS clients table with last-session and status columns",
         caption:
           "Who trained today and who has gone quiet, at a glance.",
       },
       {
         src: "traineros/trainer-client-detail.png",
+        ...screenshotImages["traineros/trainer-client-detail.png"],
         alt: "TrainerOS client detail page with programs and reminder settings",
         caption:
           "Send time is set in the client's own timezone, not the trainer's.",
       },
       {
         src: "traineros/program-builder.png",
+        ...screenshotImages["traineros/program-builder.png"],
         alt: "TrainerOS day editor with sets, reps, load and rest per exercise",
         caption:
           "Prescriptions stay free text, so 6-8, AMRAP and RPE 8 survive as typed.",
@@ -161,34 +168,40 @@ export const projects: Project[] = [
     screenshots: [
       {
         src: "plant-plotter/planner.png",
+        ...screenshotImages["plant-plotter/planner.png"],
         alt: "Plant Plotter visual planner with plants placed on a numbered garden grid",
         caption:
           "Visual planner: plants placed on a grid that persists to the API.",
       },
       {
         src: "plant-plotter/my-gardens.png",
+        ...screenshotImages["plant-plotter/my-gardens.png"],
         alt: "Plant Plotter My Gardens dashboard listing user-created gardens",
         caption: "My Gardens: multi-garden dashboard, per user.",
       },
       {
         src: "plant-plotter/garden-details.png",
+        ...screenshotImages["plant-plotter/garden-details.png"],
         alt: "Plant Plotter garden details overview page",
         caption:
           "Garden details: overview, plants, analytics, and settings in one view.",
       },
       {
         src: "plant-plotter/companion-guide.png",
+        ...screenshotImages["plant-plotter/companion-guide.png"],
         alt: "Plant Plotter companion planting guidance",
         caption: "Companion guidance pulled from the plant dataset.",
       },
       {
         src: "plant-plotter/tracker.png",
+        ...screenshotImages["plant-plotter/tracker.png"],
         alt: "Plant Plotter tracker showing a calendar of garden care tasks",
         caption:
           "Tracker: calendar, today's tasks, overdue tasks, and weather context.",
       },
       {
         src: "plant-plotter/landing-page.png",
+        ...screenshotImages["plant-plotter/landing-page.png"],
         alt: "Plant Plotter public landing page",
         caption: "Landing page: public marketing entry point.",
       },

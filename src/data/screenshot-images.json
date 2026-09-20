@@ -1,0 +1,194 @@
+{
+  "plant-plotter/companion-guide.png": {
+    "width": 1879,
+    "height": 892,
+    "previews": [
+      {
+        "src": "thumbnails/plant-plotter/companion-guide.png-640.webp",
+        "width": 640,
+        "height": 304
+      },
+      {
+        "src": "thumbnails/plant-plotter/companion-guide.png-1200.webp",
+        "width": 1200,
+        "height": 570
+      }
+    ]
+  },
+  "plant-plotter/garden-details.png": {
+    "width": 1891,
+    "height": 879,
+    "previews": [
+      {
+        "src": "thumbnails/plant-plotter/garden-details.png-640.webp",
+        "width": 640,
+        "height": 297
+      },
+      {
+        "src": "thumbnails/plant-plotter/garden-details.png-1200.webp",
+        "width": 1200,
+        "height": 558
+      }
+    ]
+  },
+  "plant-plotter/landing-page.png": {
+    "width": 1912,
+    "height": 868,
+    "previews": [
+      {
+        "src": "thumbnails/plant-plotter/landing-page.png-640.webp",
+        "width": 640,
+        "height": 291
+      },
+      {
+        "src": "thumbnails/plant-plotter/landing-page.png-1200.webp",
+        "width": 1200,
+        "height": 545
+      }
+    ]
+  },
+  "plant-plotter/my-gardens.png": {
+    "width": 1871,
+    "height": 880,
+    "previews": [
+      {
+        "src": "thumbnails/plant-plotter/my-gardens.png-640.webp",
+        "width": 640,
+        "height": 301
+      },
+      {
+        "src": "thumbnails/plant-plotter/my-gardens.png-1200.webp",
+        "width": 1200,
+        "height": 564
+      }
+    ]
+  },
+  "plant-plotter/planner.png": {
+    "width": 1836,
+    "height": 867,
+    "previews": [
+      {
+        "src": "thumbnails/plant-plotter/planner.png-640.webp",
+        "width": 640,
+        "height": 302
+      },
+      {
+        "src": "thumbnails/plant-plotter/planner.png-1200.webp",
+        "width": 1200,
+        "height": 567
+      }
+    ]
+  },
+  "plant-plotter/tracker.png": {
+    "width": 1858,
+    "height": 874,
+    "previews": [
+      {
+        "src": "thumbnails/plant-plotter/tracker.png-640.webp",
+        "width": 640,
+        "height": 301
+      },
+      {
+        "src": "thumbnails/plant-plotter/tracker.png-1200.webp",
+        "width": 1200,
+        "height": 564
+      }
+    ]
+  },
+  "traineros/clients-roster.png": {
+    "width": 1408,
+    "height": 874,
+    "previews": [
+      {
+        "src": "thumbnails/traineros/clients-roster.png-640.webp",
+        "width": 640,
+        "height": 397
+      },
+      {
+        "src": "thumbnails/traineros/clients-roster.png-1200.webp",
+        "width": 1200,
+        "height": 745
+      }
+    ]
+  },
+  "traineros/day-picker.jpeg": {
+    "width": 738,
+    "height": 1600,
+    "previews": [
+      {
+        "src": "thumbnails/traineros/day-picker.jpeg-640.webp",
+        "width": 640,
+        "height": 1388
+      },
+      {
+        "src": "thumbnails/traineros/day-picker.jpeg-738.webp",
+        "width": 738,
+        "height": 1600
+      }
+    ]
+  },
+  "traineros/log-workout.jpeg": {
+    "width": 738,
+    "height": 1600,
+    "previews": [
+      {
+        "src": "thumbnails/traineros/log-workout.jpeg-640.webp",
+        "width": 640,
+        "height": 1388
+      },
+      {
+        "src": "thumbnails/traineros/log-workout.jpeg-738.webp",
+        "width": 738,
+        "height": 1600
+      }
+    ]
+  },
+  "traineros/program-builder.png": {
+    "width": 1904,
+    "height": 895,
+    "previews": [
+      {
+        "src": "thumbnails/traineros/program-builder.png-640.webp",
+        "width": 640,
+        "height": 301
+      },
+      {
+        "src": "thumbnails/traineros/program-builder.png-1200.webp",
+        "width": 1200,
+        "height": 564
+      }
+    ]
+  },
+  "traineros/reminder-email.jpeg": {
+    "width": 738,
+    "height": 738,
+    "previews": [
+      {
+        "src": "thumbnails/traineros/reminder-email.jpeg-640.webp",
+        "width": 640,
+        "height": 640
+      },
+      {
+        "src": "thumbnails/traineros/reminder-email.jpeg-738.webp",
+        "width": 738,
+        "height": 738
+      }
+    ]
+  },
+  "traineros/trainer-client-detail.png": {
+    "width": 1903,
+    "height": 890,
+    "previews": [
+      {
+        "src": "thumbnails/traineros/trainer-client-detail.png-640.webp",
+        "width": 640,
+        "height": 299
+      },
+      {
+        "src": "thumbnails/traineros/trainer-client-detail.png-1200.webp",
+        "width": 1200,
+        "height": 561
+      }
+    ]
+  }
+}

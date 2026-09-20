@@ -115,7 +115,8 @@ for (const path of ['/not-a-real-page', '/projects/not-a-real-project']) {
 
 test('project asset references exist, including images the resolver silently drops', async () => {
   for (const project of projects) {
-    const assets = [project.leadImage, project.leadImageMobile, ...(project.screenshots || []).map(shot => shot.src)]
+    const assets = [project.leadImage, project.leadImageMobile,
+      ...(project.screenshots || []).flatMap(shot => [shot.src, ...shot.previews.map(preview => preview.src)])]
     for (const asset of assets.filter((asset): asset is string => Boolean(asset))) {
       expect((await stat(resolve('src/assets', asset))).isFile(), `${project.slug}: ${asset}`).toBe(true)
     }
