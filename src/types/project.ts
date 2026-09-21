@@ -1,5 +1,8 @@
 export type Screenshot = {
   src: string
+  width: number
+  height: number
+  previews: { src: string; width: number; height: number }[]
   alt: string
   caption?: string
 }

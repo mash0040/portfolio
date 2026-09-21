@@ -270,10 +270,15 @@ export default function ProjectDetails() {
                               className="block w-full cursor-zoom-in overflow-hidden rounded-md border border-slate-800 bg-slate-900 transition-colors hover:border-slate-600 focus-visible:border-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
                             >
                               <img
-                                src={shot.url}
+                                src={shot.previewUrl}
+                                srcSet={shot.previewSrcSet}
+                                sizes="(min-width: 816px) 572px, (min-width: 640px) calc(75vw - 40px), calc(100vw - 50px)"
+                                width={shot.width}
+                                height={shot.height}
                                 alt={shot.alt}
                                 loading="lazy"
-                                className="block w-full"
+                                className="block h-auto w-full"
+                                style={{ aspectRatio: `${shot.width} / ${shot.height}` }}
                               />
                             </button>
                             {shot.caption && (
