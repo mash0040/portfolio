@@ -14,7 +14,7 @@ export const DEFAULT_DESCRIPTION =
   "Portfolio of Ekene Masha, a software developer building practical, reliable web apps with React, TypeScript, and Node.js."
 
 export type PageMeta = {
-  /** Route path, always leading-slashed and never trailing-slashed except "/". */
+  /** Leading-slashed route path; content pages end in / to match Pages directories. */
   path: string
   title: string
   description: string
@@ -34,7 +34,7 @@ export const HOME_META: PageMeta = {
 }
 
 export const ABOUT_META: PageMeta = {
-  path: "/about",
+  path: "/about/",
   title: `About · ${SITE_NAME}`,
   description:
     "Ekene Masha's background, technical focus, and current work across React, TypeScript, ASP.NET Core, Node.js, PostgreSQL, and Azure.",
@@ -42,7 +42,7 @@ export const ABOUT_META: PageMeta = {
 }
 
 export const PROJECTS_META: PageMeta = {
-  path: "/projects",
+  path: "/projects/",
   title: `Projects · ${SITE_NAME}`,
   description:
     "Full-stack projects by Ekene Masha, each written up as a case study covering the problem, the build, the challenges, and the result.",
@@ -50,7 +50,7 @@ export const PROJECTS_META: PageMeta = {
 }
 
 export const CONTACT_META: PageMeta = {
-  path: "/contact",
+  path: "/contact/",
   title: `Contact · ${SITE_NAME}`,
   description:
     "Get in touch with Ekene Masha by email, GitHub, or LinkedIn, or download a copy of the resume.",
@@ -71,7 +71,7 @@ export const STATIC_PAGE_META: PageMeta[] = [
 
 export function projectPageMeta(project: Project): PageMeta {
   return {
-    path: `/projects/${project.slug}`,
+    path: `/projects/${project.slug}/`,
     title: `${project.title} · ${SITE_NAME}`,
     description: project.description,
     type: "article",

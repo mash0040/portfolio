@@ -171,7 +171,7 @@ export default function About() {
             <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300">
               Want to talk shop, collaborate, or hire me?{" "}
               <Link
-                to="/contact"
+                to="/contact/"
                 className="group inline-flex items-center gap-1.5 font-medium text-white"
               >
                 <span className="border-b border-slate-600 pb-0.5 transition-colors group-hover:border-white">

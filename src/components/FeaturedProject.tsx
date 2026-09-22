@@ -51,7 +51,7 @@ export default function FeaturedProject({ project, as = "h3" }: Props) {
         style={displayStyle}
       >
         <Link
-          to={`/projects/${project.slug}`}
+          to={`/projects/${project.slug}/`}
           className="rounded-sm transition-colors hover:text-slate-200 focus-visible:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-950"
         >
           {project.title}
@@ -79,7 +79,7 @@ export default function FeaturedProject({ project, as = "h3" }: Props) {
 
       <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm sm:gap-x-7">
         <Link
-          to={`/projects/${project.slug}`}
+          to={`/projects/${project.slug}/`}
           className="group inline-flex items-center gap-2 font-medium text-white focus-visible:outline-none"
         >
           <span className="border-b border-slate-600 pb-0.5 transition-colors group-hover:border-white group-focus-visible:border-white">
@@ -136,7 +136,7 @@ export default function FeaturedProject({ project, as = "h3" }: Props) {
 
       {hasLead && (
         <Link
-          to={`/projects/${project.slug}`}
+          to={`/projects/${project.slug}/`}
           tabIndex={-1}
           aria-hidden="true"
           className={`mt-12 max-w-3xl border border-slate-800 transition-colors hover:border-slate-600 ${

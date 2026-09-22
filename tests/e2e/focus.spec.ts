@@ -21,7 +21,7 @@ test('client navigation moves focus to the new page content', async ({ page }) =
   await page.goto('/')
   await tabTo(page, page.getByRole('link', { name: 'View projects', exact: true }))
   await page.keyboard.press('Enter')
-  await expect(page).toHaveURL(/\/projects$/)
+  await expect(page).toHaveURL(/\/projects\/$/)
   await expect.poll(() => page.evaluate(() => {
     const active = document.activeElement
     return active?.matches('main, main h1') ?? false
@@ -47,7 +47,7 @@ test('Back and Forward focus the destination content and allow keyboard navigati
   await page.goto('/')
   await tabTo(page, page.getByRole('link', { name: 'View projects', exact: true }))
   await page.keyboard.press('Enter')
-  await expect(page).toHaveURL(/\/projects$/)
+  await expect(page).toHaveURL(/\/projects\/$/)
   await expect(page.getByRole('main')).toBeFocused()
 
   await page.goBack()
@@ -57,7 +57,7 @@ test('Back and Forward focus the destination content and allow keyboard navigati
   await expect(page.getByRole('link', { name: 'Listen to the pronunciation of Ekene' })).toBeFocused()
 
   await page.goForward()
-  await expect(page).toHaveURL(/\/projects$/)
+  await expect(page).toHaveURL(/\/projects\/$/)
   await expect(page.getByRole('main')).toBeFocused()
   await page.keyboard.press('Tab')
   await expect.poll(() => page.getByRole('main').evaluate(el => el.contains(document.activeElement))).toBe(true)
@@ -101,7 +101,7 @@ test.describe('mobile menu', () => {
     await page.keyboard.press('Enter')
     await tabTo(page, page.locator('#primary-menu').getByRole('link', { name: 'About', exact: true }))
     await page.keyboard.press('Enter')
-    await expect(page).toHaveURL(/\/about$/)
+    await expect(page).toHaveURL(/\/about\/$/)
     await expect(toggle).toHaveAttribute('aria-expanded', 'false')
     await expect.poll(() => page.evaluate(() => document.activeElement?.matches('main, main h1') ?? false)).toBe(true)
   })

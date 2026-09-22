@@ -97,6 +97,8 @@ function prerenderMeta(): Plugin {
           await writeFile(indexPath, html, 'utf8')
           continue
         }
+        // Directory indexes match the trailing-slash URLs in the metadata and
+        // links. Cloudflare Pages redirects the slashless versions here.
         const dir = path.join(outDir, meta.path)
         await mkdir(dir, { recursive: true })
         await writeFile(path.join(dir, 'index.html'), html, 'utf8')

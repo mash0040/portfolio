@@ -29,7 +29,7 @@ export default function NotFound() {
             <span aria-hidden="true">→</span>
           </Link>
           <Link
-            to="/projects"
+            to="/projects/"
             className="group inline-flex items-center gap-2 font-medium text-slate-300 transition-colors hover:text-white"
           >
             <span className="border-b border-slate-700 pb-0.5 transition-colors group-hover:border-white">

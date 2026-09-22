@@ -76,7 +76,7 @@ export default function ProjectDetails() {
             We couldn't find that project.
           </p>
           <Link
-            to="/projects"
+            to="/projects/"
             className="group mt-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-white"
           >
             <span aria-hidden="true">←</span>
@@ -121,7 +121,7 @@ export default function ProjectDetails() {
   return (
     <div className="mx-auto max-w-6xl py-20 sm:py-28">
       <Link
-        to="/projects"
+        to="/projects/"
         className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none"
       >
         <span

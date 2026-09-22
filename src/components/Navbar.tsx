@@ -3,9 +3,9 @@ import { NavLink } from "react-router-dom"
 
 const links = [
   { to: "/", label: "Home", end: true },
-  { to: "/about", label: "About" },
-  { to: "/projects", label: "Projects" },
-  { to: "/contact", label: "Contact" },
+  { to: "/about/", label: "About" },
+  { to: "/projects/", label: "Projects" },
+  { to: "/contact/", label: "Contact" },
 ]
 
 const baseLinkClass =

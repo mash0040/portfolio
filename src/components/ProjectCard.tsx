@@ -14,7 +14,7 @@ export default function ProjectCard({ project, as = "h3" }: Props) {
   return (
     <article className="group relative flex h-full flex-col border border-slate-800 bg-slate-950 p-6 transition-colors duration-200 hover:border-slate-600 focus-within:border-slate-600 sm:p-7">
       <Link
-        to={`/projects/${project.slug}`}
+        to={`/projects/${project.slug}/`}
         aria-label={`View ${project.title} case study`}
         className="absolute inset-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
       />
