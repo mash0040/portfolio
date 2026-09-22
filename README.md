@@ -79,3 +79,9 @@ While building this portfolio, I focused on:
 - Portfolio: [https://akmasha.dev/]
 - GitHub: [https://github.com/mash0040]
 - LinkedIn: [www.linkedin.com/in/mashaak]
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+Anyone is free to use this website as inspiration for their own projects.
