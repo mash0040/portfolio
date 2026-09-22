@@ -8,6 +8,7 @@ import {
   allPageMeta,
   canonicalUrl,
   NOT_FOUND_META,
+  SITE_URL,
   type PageMeta,
 } from './src/utils/seo'
 
@@ -112,7 +113,23 @@ function prerenderMeta(): Plugin {
         'utf8',
       )
 
-      this.info(`prerendered ${pages.length} routes + 404.html`)
+      // Use the same content registry and canonical URLs as the page metadata;
+      // the separately generated 404 page and static assets are not listed.
+      const sitemap = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        ...pages.map(meta => `  <url><loc>${attr(canonicalUrl(meta.path))}</loc></url>`),
+        '</urlset>',
+        '',
+      ].join('\n')
+      await writeFile(path.join(outDir, 'sitemap.xml'), sitemap, 'utf8')
+      await writeFile(
+        path.join(outDir, 'robots.txt'),
+        `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`,
+        'utf8',
+      )
+
+      this.info(`prerendered ${pages.length} routes + 404.html, sitemap.xml and robots.txt`)
     },
   }
 }

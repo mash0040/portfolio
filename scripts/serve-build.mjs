@@ -9,6 +9,7 @@ const fallback = await readFile(path.join(root, '404.html'))
 const types = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript',
   '.css': 'text/css', '.json': 'application/json', '.pdf': 'application/pdf',
+  '.xml': 'application/xml; charset=utf-8', '.txt': 'text/plain; charset=utf-8',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.svg': 'image/svg+xml', '.webp': 'image/webp', '.gif': 'image/gif',
   '.woff2': 'font/woff2', '.ico': 'image/x-icon',
