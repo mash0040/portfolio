@@ -30,7 +30,7 @@ export default function Home() {
               id="hero-heading"
               className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl"
             >
-              I build practical full-stack web apps from idea to deployment.
+              I build full-stack web applications from idea to deployment.
             </h1>
 
             <p className="mt-7 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
@@ -45,10 +45,7 @@ export default function Home() {
               >
                 Ekene
               </a>
-              , a software developer building reliable web applications with
-              React and TypeScript on the front end and ASP.NET Core or
-              Node.js behind them. I care about clean APIs, auth that holds,
-              and shipping apps that are stable enough for real users.
+              , a software developer focused on useful, dependable products. I work across the stack to turn ideas into applications that are intuitive to use, thoughtfully built, and reliable in practice.
             </p>
 
             <div className="mt-8 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-slate-400">
