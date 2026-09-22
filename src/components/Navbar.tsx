@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { NavLink } from "react-router-dom"
+import { useHydrated } from "../utils/useHydrated"
 
 const links = [
   { to: "/", label: "Home", end: true },
@@ -12,6 +13,7 @@ const baseLinkClass =
   "rounded-sm px-1 py-0.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
 
 export default function Navbar() {
+  const hydrated = useHydrated()
   const [open, setOpen] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -38,24 +40,25 @@ export default function Navbar() {
          screenshot lightbox (z-50) and the skip link (z-50). */
       className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4 sm:flex-nowrap">
         <NavLink
           to="/"
           end
           className={`${baseLinkClass} font-display text-lg font-medium tracking-tight text-white hover:text-slate-200`}
-          style={{ fontVariationSettings: '"opsz" 144' }}
         >
           Ekene Masha
         </NavLink>
 
-        <ul className="hidden items-center gap-6 sm:flex">
+        <ul className={hydrated
+          ? "hidden items-center gap-6 sm:flex"
+          : "flex w-full flex-wrap items-center gap-x-3 gap-y-1 sm:w-auto sm:gap-6"}>
           {links.map((link) => (
             <li key={link.to}>
               <NavLink
                 to={link.to}
                 end={link.end}
                 className={({ isActive }) =>
-                  `${baseLinkClass} ${
+                  `${baseLinkClass} ${!hydrated ? "inline-flex min-h-11 items-center sm:min-h-0" : ""} ${
                     isActive
                       ? "text-white"
                       : "text-slate-400 hover:text-white"
@@ -78,40 +81,42 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <button
-          ref={menuButtonRef}
-          type="button"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          aria-controls="primary-menu"
-          onClick={() => setOpen((v) => !v)}
-          className={`${baseLinkClass} -mr-1 inline-flex h-9 w-9 items-center justify-center text-slate-300 hover:text-white sm:hidden`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-6 w-6"
-            aria-hidden="true"
+        {hydrated && (
+          <button
+            ref={menuButtonRef}
+            type="button"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="primary-menu"
+            onClick={() => setOpen((v) => !v)}
+            className={`${baseLinkClass} -mr-1 inline-flex h-9 w-9 items-center justify-center text-slate-300 hover:text-white sm:hidden`}
           >
-            {open ? (
-              <>
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </>
-            ) : (
-              <>
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </>
-            )}
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-6 w-6"
+              aria-hidden="true"
+            >
+              {open ? (
+                <>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </>
+              ) : (
+                <>
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </>
+              )}
+            </svg>
+          </button>
+        )}
       </div>
 
       {open && (

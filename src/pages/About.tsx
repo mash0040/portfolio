@@ -116,7 +116,6 @@ export default function About() {
         </p>
         <h1
           className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl"
-          style={{ fontVariationSettings: '"opsz" 144' }}
         >
           Hi, I'm Ekene.
         </h1>
@@ -144,7 +143,6 @@ export default function About() {
             <div className="sm:col-span-9">
               <h2
                 className="font-display text-2xl font-medium tracking-tight text-white sm:text-3xl"
-                style={{ fontVariationSettings: '"opsz" 144' }}
               >
                 {section.heading}
               </h2>
@@ -164,7 +162,6 @@ export default function About() {
           <div className="sm:col-span-9">
             <h2
               className="font-display text-2xl font-medium tracking-tight text-white sm:text-3xl"
-              style={{ fontVariationSettings: '"opsz" 144' }}
             >
               Get in touch
             </h2>

@@ -37,7 +37,6 @@ export default function Contact() {
         </p>
         <h1
           className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl"
-          style={{ fontVariationSettings: '"opsz" 144' }}
         >
           Get in touch.
         </h1>

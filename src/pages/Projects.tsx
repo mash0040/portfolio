@@ -5,8 +5,6 @@ import { getFeaturedProjects, getSelectedProjects } from "../utils/projects"
 import { usePageMeta } from "../utils/usePageMeta"
 import { PROJECTS_META } from "../utils/seo"
 
-const displayStyle = { fontVariationSettings: '"opsz" 144' }
-
 // Two columns at most, so a trailing odd card can span the full measure
 // instead of stranding two empty tracks beside it.
 const cardGrid =
@@ -26,7 +24,6 @@ export default function Projects() {
         </p>
         <h1
           className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl"
-          style={displayStyle}
         >
           Projects.
         </h1>
@@ -55,7 +52,6 @@ export default function Projects() {
                   <h2
                     id="featured-heading"
                     className="mt-5 font-display text-2xl font-medium tracking-tight text-white sm:text-3xl"
-                    style={displayStyle}
                   >
                     {featured.length === 1
                       ? "Featured Project."
@@ -83,7 +79,6 @@ export default function Projects() {
                   <h2
                     id="selected-heading"
                     className="mt-5 font-display text-2xl font-medium tracking-tight text-white sm:text-3xl"
-                    style={displayStyle}
                   >
                     Selected Projects.
                   </h2>

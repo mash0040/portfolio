@@ -27,7 +27,6 @@ export default function ProjectCard({ project, as = "h3" }: Props) {
 
       <Heading
         className="mt-3 font-display text-2xl font-medium leading-tight tracking-tight text-white transition-colors group-hover:text-slate-200 group-focus-within:text-slate-200"
-        style={{ fontVariationSettings: '"opsz" 144' }}
       >
         {project.title}
       </Heading>

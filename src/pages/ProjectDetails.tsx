@@ -4,6 +4,7 @@ import { getProjectBySlug } from "../utils/projects"
 import { resolveScreenshots, type ResolvedShot } from "../utils/assets"
 import { usePageMeta } from "../utils/usePageMeta"
 import { NOT_FOUND_META, projectPageMeta } from "../utils/seo"
+import { useHydrated } from "../utils/useHydrated"
 
 type Section = { id: string } & (
   | { kind: "paragraph"; heading: string; body: string }
@@ -11,9 +12,23 @@ type Section = { id: string } & (
   | { kind: "screenshots"; heading: string; items: ResolvedShot[] }
 )
 
-const displayStyle = { fontVariationSettings: '"opsz" 144' }
+function ScreenshotImage({ shot }: { shot: ResolvedShot }) {
+  return (
+    <img
+      src={shot.previewUrl}
+      srcSet={shot.previewSrcSet}
+      sizes="(min-width: 816px) 572px, (min-width: 640px) calc(75vw - 40px), calc(100vw - 50px)"
+      width={shot.width}
+      height={shot.height}
+      alt={shot.alt}
+      loading="lazy"
+      className="block h-auto w-full"
+    />
+  )
+}
 
 export default function ProjectDetails() {
+  const hydrated = useHydrated()
   const { slug } = useParams<{ slug: string }>()
   const project = getProjectBySlug(slug)
 
@@ -68,7 +83,6 @@ export default function ProjectDetails() {
           </p>
           <h1
             className="mt-5 font-display text-3xl font-medium tracking-tight text-white sm:text-4xl"
-            style={displayStyle}
           >
             Project not found.
           </h1>
@@ -141,7 +155,6 @@ export default function ProjectDetails() {
         </p>
         <h1
           className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl"
-          style={displayStyle}
         >
           {project.title}
         </h1>
@@ -260,27 +273,27 @@ export default function ProjectDetails() {
                       {section.items.map((shot, shotIndex) => (
                         <li key={shot.src}>
                           <figure>
-                            <button
-                              type="button"
-                              ref={(el) => {
-                                triggerRefs.current[shotIndex] = el
-                              }}
-                              onClick={() => setLightboxIndex(shotIndex)}
-                              aria-label={`Open ${shot.alt} at full size`}
-                              className="block w-full cursor-zoom-in overflow-hidden rounded-md border border-slate-800 bg-slate-900 transition-colors hover:border-slate-600 focus-visible:border-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-                            >
-                              <img
-                                src={shot.previewUrl}
-                                srcSet={shot.previewSrcSet}
-                                sizes="(min-width: 816px) 572px, (min-width: 640px) calc(75vw - 40px), calc(100vw - 50px)"
-                                width={shot.width}
-                                height={shot.height}
-                                alt={shot.alt}
-                                loading="lazy"
-                                className="block h-auto w-full"
-                                style={{ aspectRatio: `${shot.width} / ${shot.height}` }}
-                              />
-                            </button>
+                            {hydrated ? (
+                              <button
+                                type="button"
+                                ref={(el) => {
+                                  triggerRefs.current[shotIndex] = el
+                                }}
+                                onClick={() => setLightboxIndex(shotIndex)}
+                                aria-label={`Open ${shot.alt} at full size`}
+                                className="block w-full cursor-zoom-in overflow-hidden rounded-md border border-slate-800 bg-slate-900 transition-colors hover:border-slate-600 focus-visible:border-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                              >
+                                <ScreenshotImage shot={shot} />
+                              </button>
+                            ) : (
+                              <a
+                                href={shot.url}
+                                aria-label={`Open ${shot.alt} at full size`}
+                                className="block w-full cursor-zoom-in overflow-hidden rounded-md border border-slate-800 bg-slate-900 transition-colors hover:border-slate-600 focus-visible:border-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                              >
+                                <ScreenshotImage shot={shot} />
+                              </a>
+                            )}
                             {shot.caption && (
                               <figcaption className="mt-3 font-mono text-xs leading-relaxed text-slate-400">
                                 {shot.caption}

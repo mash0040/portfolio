@@ -13,7 +13,6 @@ export default function NotFound() {
         </p>
         <h1
           className="mt-5 font-display text-4xl font-medium tracking-tight text-white sm:text-5xl"
-          style={{ fontVariationSettings: '"opsz" 144' }}
         >
           Page not found.
         </h1>

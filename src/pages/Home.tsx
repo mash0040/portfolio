@@ -4,8 +4,6 @@ import { getFeaturedProjects } from "../utils/projects";
 import { usePageMeta } from "../utils/usePageMeta";
 import { HOME_META } from "../utils/seo";
 
-const displayStyle = { fontVariationSettings: '"opsz" 144' };
-
 export default function Home() {
   usePageMeta(HOME_META);
   const featured = getFeaturedProjects(3);
@@ -18,15 +16,7 @@ export default function Home() {
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-160"
-          style={{
-            backgroundImage:
-              "radial-gradient(60% 55% at 30% 20%, rgba(56, 189, 248, 0.2), transparent 70%)",
-            maskImage:
-              "radial-gradient(75% 75% at 30% 30%, black, transparent 85%)",
-            WebkitMaskImage:
-              "radial-gradient(75% 75% at 30% 30%, black, transparent 85%)",
-          }}
+          className="hero-wash pointer-events-none absolute inset-x-0 top-0 -z-10 h-160"
         />
 
         <div className="mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center py-20 sm:py-28">
@@ -39,7 +29,6 @@ export default function Home() {
             <h1
               id="hero-heading"
               className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl"
-              style={displayStyle}
             >
               I build practical full-stack web apps from idea to deployment.
             </h1>
@@ -112,7 +101,6 @@ export default function Home() {
                 <h2
                   id="featured-heading"
                   className="mt-5 font-display text-4xl font-medium leading-tight tracking-tight text-white sm:text-5xl"
-                  style={displayStyle}
                 >
                   {featured.length === 1
                     ? "Featured Project."
