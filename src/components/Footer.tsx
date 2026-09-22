@@ -1,5 +1,5 @@
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
+  const currentYear = import.meta.env.VITE_BUILD_YEAR
   return (
     <footer className="border-t border-slate-800">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-6 text-sm text-slate-400">

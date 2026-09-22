@@ -1,8 +1,9 @@
-import { defineConfig, type Plugin } from 'vite'
+import { build, defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { projects } from './src/data/projects'
 import {
   allPageMeta,
@@ -11,6 +12,9 @@ import {
   SITE_URL,
   type PageMeta,
 } from './src/utils/seo'
+
+// Share the year between the two bundles so hydration also works across New Year.
+const define = { 'import.meta.env.VITE_BUILD_YEAR': JSON.stringify(new Date().getFullYear()) }
 
 /** Minimal escaping for values interpolated into HTML attributes. */
 function attr(value: string): string {
@@ -65,7 +69,7 @@ function applyMeta(html: string, meta: PageMeta): string {
       // A silent miss would ship the homepage's metadata on every route, which
       // is the exact bug this plugin exists to fix. Fail the build instead.
       throw new Error(
-        `[prerender-meta] no match for ${pattern} in index.html. ` +
+        `[prerender-pages] no match for ${pattern} in index.html. ` +
           `The head tags must stay single-line and match the shapes in this plugin.`,
       )
     }
@@ -75,25 +79,52 @@ function applyMeta(html: string, meta: PageMeta): string {
 }
 
 /**
- * Writes a real HTML file for every route with that route's metadata baked in.
+ * Writes each route's React content and metadata into a static HTML file.
  *
  * Link-preview crawlers do not run JavaScript, so client-side meta updates are
  * invisible to them. Without this, every shared URL previews as the homepage.
  * The route table comes from src/utils/seo.ts, the same module the runtime hook
  * reads, so the prerendered HTML and the client can't disagree.
  */
-function prerenderMeta(): Plugin {
+function prerenderPages(): Plugin {
   return {
-    name: 'prerender-meta',
+    name: 'prerender-pages',
     apply: 'build',
     async closeBundle() {
       const outDir = path.resolve(__dirname, 'dist')
       const indexPath = path.join(outDir, 'index.html')
       const template = await readFile(indexPath, 'utf8')
 
+      // Compile the same components with Vite so asset URLs and glob imports
+      // match the browser build. This bundle is build-only, never deployed.
+      const renderDir = path.resolve(__dirname, 'node_modules/.cache/portfolio-prerender')
+      await build({
+        configFile: false,
+        plugins: [react()],
+        define,
+        build: {
+          ssr: 'src/entry-server.tsx',
+          outDir: renderDir,
+          copyPublicDir: false,
+          emptyOutDir: true,
+        },
+      })
+      const { render }: { render: (pathname: string) => string } = await import(
+        `${pathToFileURL(path.join(renderDir, 'entry-server.js')).href}?build=${Date.now()}`
+      )
+      const root = '<div id="root"></div>'
+      if (!template.includes(root)) throw new Error('[prerender-pages] Missing root in index.html')
+      function pageHtml(meta: PageMeta): string {
+        const content = render(meta.path)
+        if (!content.includes('<main')) throw new Error(`[prerender-pages] Empty page: ${meta.path}`)
+        return applyMeta(template, meta).replace(root, () =>
+          `<div id="root" data-rendered-path="${attr(meta.path)}">${content}</div>`,
+        )
+      }
+
       const pages = allPageMeta(projects)
       for (const meta of pages) {
-        const html = applyMeta(template, meta)
+        const html = pageHtml(meta)
         if (meta.path === '/') {
           await writeFile(indexPath, html, 'utf8')
           continue
@@ -109,7 +140,7 @@ function prerenderMeta(): Plugin {
       // rule claims them; giving it the right title beats the default.
       await writeFile(
         path.join(outDir, '404.html'),
-        applyMeta(template, NOT_FOUND_META),
+        pageHtml(NOT_FOUND_META),
         'utf8',
       )
 
@@ -135,5 +166,6 @@ function prerenderMeta(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), prerenderMeta()],
+  define,
+  plugins: [react(), tailwindcss(), prerenderPages()],
 })

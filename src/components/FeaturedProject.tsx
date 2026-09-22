@@ -8,8 +8,6 @@ type Props = {
   as?: "h2" | "h3"
 }
 
-const displayStyle = { fontVariationSettings: '"opsz" 144' }
-
 /**
  * The lead project, set as a full-width editorial block rather than a card.
  * A single card stranded in a multi-column grid reads as a rendering fault;
@@ -48,7 +46,6 @@ export default function FeaturedProject({ project, as = "h3" }: Props) {
 
       <Heading
         className="mt-4 font-display text-4xl font-medium leading-tight tracking-tight text-white sm:text-5xl"
-        style={displayStyle}
       >
         <Link
           to={`/projects/${project.slug}/`}

@@ -10,6 +10,17 @@ html {
   font-feature-settings: "ss01", "cv11";
 }
 
+/* Static HTML must respect style-src-attr 'none', just like the hydrated UI. */
+.font-display {
+  font-variation-settings: "opsz" 144;
+}
+
+.hero-wash {
+  background-image: radial-gradient(60% 55% at 30% 20%, rgba(56, 189, 248, 0.2), transparent 70%);
+  mask-image: radial-gradient(75% 75% at 30% 30%, black, transparent 85%);
+  -webkit-mask-image: radial-gradient(75% 75% at 30% 30%, black, transparent 85%);
+}
+
 /* The system's motion is feedback only, so it all collapses to instant when
    the reader has asked for reduced motion. Nothing here carries meaning that
    the transition itself is responsible for communicating. */

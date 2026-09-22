@@ -25,7 +25,7 @@ is deployed.
 | Font stylesheet | `https://fonts.googleapis.com` from `index.html`. |
 | Fraunces and JetBrains Mono fonts | `https://fonts.gstatic.com`. |
 | Screenshots, icons, social image | Same origin; screenshot assets use `?no-inline`. No external image hosts or data URLs are needed. |
-| React styles | React assigns individual DOM style properties for optical sizing, decoration, aspect ratios, and scroll locking. These remain usable with `style-src-attr 'none'`; raw style attributes and inline style elements are not allowed. |
+| Page styles | Optical sizing and decoration use the bundled stylesheet; screenshot dimensions reserve space without inline styles. The lightbox assigns the body's overflow property at runtime for scroll locking. Raw style attributes and inline style elements are not allowed by `style-src-attr 'none'`. |
 | Cloudflare analytics script | `https://static.cloudflareinsights.com/beacon.min.js`, injected by Pages into production HTML. |
 | Analytics delivery | Same-origin `/cdn-cgi/rum` and `https://cloudflareinsights.com` cover Cloudflare's documented delivery modes. Confirm the actual endpoint in the deployed browser. |
 | External links | GitHub, LinkedIn, project demos, and NameDrop are navigation destinations, not embedded resources; they do not belong in resource allowlists. |
