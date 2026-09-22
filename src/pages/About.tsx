@@ -10,32 +10,53 @@ const techGroups: { label: string; items: string[] }[] = [
   },
   {
     label: "Backend",
-    items: ["ASP.NET Core", "C#", "Python", "Node.js", "Express", "REST APIs"],
+    items: ["C#", "ASP.NET Core", "Node.js", "Express", "Python", "REST APIs"],
   },
   {
-    label: "Data & Auth",
-    items: ["PostgreSQL", "MySQL", "EF Core", "JWT", "Magic-link sessions"],
+    label: "Data & authentication",
+    items: ["PostgreSQL", "MySQL", "EF Core", "JWT", "magic-link sessions"],
   },
   {
-    label: "Platform & Testing",
-    items: ["Azure", "Vercel", "GitHub Actions", "xUnit", "Vitest"],
+    label: "Testing & API tools",
+    items: ["xUnit", "Vitest", "Selenium", "Postman"],
+  },
+  {
+    label: "Cloud & delivery",
+    items: ["Azure", "Vercel", "Render", "Cloudflare Pages", "Neon", "Aiven", "GitHub Actions"],
+  },
+  {
+    label: "Integrations",
+    items: ["Resend for transactional email"],
   },
 ];
 
 const experience = [
-  "Built and shipped TrainerOS, a multi-tenant coaching platform on ASP.NET Core and Postgres, with magic-link auth, revocable server-side sessions, and data access scoped so a query for another trainer's client fails to compile.",
-  "Moved reminder delivery into a queue-backed Azure Function App so a slow or failing send never blocks an API request, with duplicate sends prevented by a unique index rather than application logic.",
-  "Took Plant Plotter from a group capstone to a live product: replaced course-grade auth with JWT, bcrypt, and password reset, added footprint and overlap validation to the planner, reworked it for touch after drag-and-drop proved awkward on mobile, and cut API load with caching, lighter payloads, and MySQL indexes.",
-  "Adopted mutation testing as standard practice: break the mechanism, confirm the test fails, revert. It caught seven tests that passed while asserting nothing real, one of which was pinning a shipped bug as correct behaviour.",
-  "Wired deployments across Azure App Service, Azure Functions, Vercel, Neon, and Cloudflare Pages, with GitHub Actions pipelines gated on EF Core migrations so a failed migration stops the deploy instead of shipping code that assumes it applied.",
-  "Debugged full-stack issues by tracing problems through the UI, API, database, environment variables, CORS, deployment settings, and browser behavior.",
+  {
+    label: "TrainerOS",
+    description: "Built and deployed a multi-tenant coaching platform with magic-link authentication, revocable sessions, and trainer-scoped data access. Moved reminders into queue-backed background processing to keep delivery failures separate from API requests.",
+  },
+  {
+    label: "Plant Plotter",
+    description: "Continued a group capstone independently, improving authentication, password recovery, garden-layout validation, mobile interactions, and database performance.",
+  },
+  {
+    label: "Testing",
+    description: "Used mutation testing to verify that tests detect broken behavior, uncovering ineffective assertions and a test that incorrectly treated a shipped bug as expected behavior.",
+  },
+  {
+    label: "Deployment",
+    description: "Built GitHub Actions pipelines for cloud deployments, including migration checks that stop a release when required database changes fail.",
+  },
+  {
+    label: "Debugging",
+    description: "Traced problems across the interface, API, database, and hosting configuration to identify their underlying causes.",
+  },
 ];
 
 const now = [
-  "Extending TrainerOS, which is deployed, actively maintained, and the project I point people at first.",
-  "Deepening my .NET and C# work: EF Core query shaping, background processing, and tests that fail when the mechanism breaks.",
-  "Building clearer project case studies that explain not just what I built, but the decisions, trade-offs, and improvements behind the work.",
-  "Targeting junior to mid-level full-stack roles where I can own features end to end and keep learning from a team.",
+  "Extending and maintaining TrainerOS while refining my other projects.",
+  "Deepening my knowledge of cloud infrastructure, deployment, and application reliability.",
+  "Exploring developments in AI and evaluating where they can improve products and development workflows.",
 ];
 
 const sections: {
@@ -49,7 +70,7 @@ const sections: {
     label: "Stack",
     heading: "Technical focus",
     body: (
-      <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {techGroups.map((group) => (
           <div key={group.label}>
             <h3 className="font-mono text-[11px] uppercase tracking-widest text-slate-400">
@@ -68,11 +89,14 @@ const sections: {
   {
     number: "02",
     label: "Experience",
-    heading: "What I've worked on",
+    heading: "What I’ve worked on",
     body: (
       <ul className="mt-5 max-w-xl list-disc space-y-3 pl-5 text-base leading-relaxed text-slate-300 marker:text-slate-500">
         {experience.map((item) => (
-          <li key={item}>{item}</li>
+          <li key={item.label}>
+            <strong className="font-semibold text-slate-200">{item.label}:</strong>{" "}
+            {item.description}
+          </li>
         ))}
       </ul>
     ),
@@ -83,18 +107,17 @@ const sections: {
     heading: "Working with AI systems",
     body: (
       <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300">
-        I've also worked on the AI side of software: evaluating model
-        outputs in Python, writing structured prompts, validating responses,
-        and identifying reproducible defects. That experience strengthened
-        how I think about debugging, edge cases, clarity, and quality
-        control.
+        My AI-related work includes evaluating model outputs with Python,
+        writing structured prompts, validating responses, and documenting
+        reproducible defects. I bring the same attention to edge cases and
+        clear evidence to my software projects.
       </p>
     ),
   },
   {
     number: "04",
     label: "Now",
-    heading: "What I'm doing this year",
+    heading: "Current focus",
     body: (
       <ul className="mt-5 max-w-xl list-disc space-y-3 pl-5 text-base leading-relaxed text-slate-300 marker:text-slate-500">
         {now.map((item) => (
@@ -117,16 +140,17 @@ export default function About() {
         <h1
           className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight text-white sm:text-6xl"
         >
-          Hi, I'm Ekene.
+          Hi, I’m Ekene.
         </h1>
         <p className="mt-7 text-base leading-relaxed text-slate-300 sm:text-lg">
-          I'm a software developer who builds full-stack products and ships
-          them. React and TypeScript on the front end, ASP.NET Core or
-          Node.js on the back, with Postgres or MySQL behind them. What I
-          care about most is the unglamorous part: auth that holds, data
-          access that can't leak between tenants, tests that fail when
-          something actually breaks, and deploys that stop themselves when a
-          migration doesn't apply.
+          I’m a software developer who builds and maintains full-stack
+          applications, taking ideas from design through deployment.
+        </p>
+        <p className="mt-5 text-base leading-relaxed text-slate-300 sm:text-lg">
+          I care about thoughtful user experiences and dependable software:
+          secure authentication, well-designed data access, meaningful tests,
+          and reliable releases. I enjoy solving problems across the stack,
+          learning new tools, and choosing approaches that fit the product.
         </p>
       </header>
 
