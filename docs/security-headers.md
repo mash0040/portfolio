@@ -1,10 +1,21 @@
 # Security headers rollout
 
 `public/_headers` is copied to `dist/_headers` by Vite and read by Cloudflare
-Pages. The resource policy starts in **report-only** mode. It does not block
-unwanted resources until a separate, validated enforcement rollout.
+Pages. The checked-in resource policy uses **enforcement** mode through
+`Content-Security-Policy`, blocking resources that violate the policy after
+deployment. It replaces the report-only header with the same directives.
 `X-Frame-Options: DENY` immediately prevents framing, including same-origin
 framing; the portfolio has no supported embedding use case.
+
+## Report-only validation
+
+Before approving enforcement, the maintainer reported that manual browser checks
+passed with no CSP warnings. Cloudflare analytics successfully sent a POST to
+`https://cloudflareinsights.com/cdn-cgi/rum`, returning HTTP 204. This is
+maintainer-reported evidence from the report-only stage, not verification of an
+enforced deployment. The browser/version, route list, and deployed revision were
+not supplied with that report. Repeat the rollout checks below after enforcement
+is deployed.
 
 ## Resource inventory
 
@@ -22,9 +33,10 @@ framing; the portfolio has no supported embedding use case.
 
 There is no CSP reporting service configured. Violations are observed in browser
 DevTools and captured by local Playwright tests using `securitypolicyviolation`.
-A warning about the lack of a reporting endpoint is expected; it is not evidence
-that a resource was blocked. Do not point reports at a nonexistent endpoint or
-Cloudflare's unrelated network-error reporting service. This setup does not
+During report-only validation or rollback, a warning about the lack of a reporting
+endpoint may appear; it is not evidence that a resource was blocked. Do not point
+reports at a nonexistent endpoint or Cloudflare's unrelated network-error
+reporting service. This setup does not
 collect unattended production visitor reports.
 
 ## HSTS: explicit headers and inherited .dev protection
@@ -65,9 +77,9 @@ npm run test:e2e
 ```
 
 The security tests read the built `_headers` and inject its common headers into
-local document responses. They first exercise report-only behavior, then exercise
-the candidate policy in enforcement mode **only in the test browser**. They
-check resource loading, fonts, React styles, rejection/reporting of an inline
+local document responses. They exercise the shipped enforcement policy and a
+report-only rollback simulation independently, with only one CSP header in each
+mode. They check resource loading, fonts, React styles, rejection/reporting of an inline
 script, and denial of framing. The analytics test uses a synthetic script and sink at the allowed URLs;
 it does not send fabricated analytics or prove that the live beacon works.
 The tests also check that HSTS rules are limited to the two named hosts and that
@@ -75,24 +87,27 @@ the build preserves the source configuration. They do not emulate Cloudflare's
 matching, redirects, or TLS. These local tests are skipped when
 `PLAYWRIGHT_BASE_URL` is set so they cannot mask live response headers.
 
-## Authorized rollout and enforcement gate
+## Authorized enforcement rollout
 
-1. Deploy report-only configuration and verify valid HTTPS and inherited `.dev`
-   preload coverage for both hosts, preserving the existing www redirect.
+1. Deploy the enforcement configuration only after live report-only validation
+   and approval. Verify valid HTTPS and inherited `.dev` preload coverage for
+   both hosts, preserving the existing www redirect.
    Deployment and Cloudflare changes require separate authorization.
 2. Inspect HTTPS **GET response headers without following redirects**, using
    `curl.exe -sS -D - -o NUL <URL>` on Windows. Check:
 
    | URL | Expected result |
    | --- | --- |
-   | `https://akmasha.dev/` | 200; report-only CSP, DENY, nosniff, referrer policy, one HSTS header. |
+   | `https://akmasha.dev/` | 200; enforced CSP, DENY, nosniff, referrer policy, one HSTS header. |
    | `https://akmasha.dev/projects/traineros/` | 200; same headers and route-specific title/canonical metadata. |
    | `https://akmasha.dev/not-a-real-page` | 404; same security headers and not-found metadata. |
    | `https://akmasha.dev/Ekene_Masha_Resume.pdf` | 200; `application/pdf`, HSTS, PDF opens normally. |
    | `https://www.akmasha.dev/` | Valid HTTPS; 308 to `https://akmasha.dev/`. An explicit HSTS header is optional. |
    | `https://www.akmasha.dev/projects/traineros/?check=1` | Valid HTTPS; 308 preserving the path and query. An explicit HSTS header is optional. |
 
-   Where an explicit HSTS header is served, its value must be exactly
+   Pages responses must carry `Content-Security-Policy` with the checked-in
+   directive value and no `Content-Security-Policy-Report-Only` header. Where an
+   explicit HSTS header is served, its value must be exactly
    `max-age=86400`, with no duplicates, `includeSubDomains`, or `preload`.
    Record an absent header on the www redirect as the accepted limitation above,
    not as missing protection in browsers honoring the `.dev` preload entry.
@@ -104,26 +119,28 @@ matching, redirects, or TLS. These local tests are skipped when
    through navigation on desktop and mobile. Open DevTools with Preserve log:
    confirm fonts, screenshot thumbnails/full-size lightboxes, mobile menu,
    keyboard focus/Escape, resume, and external links work. Check a missing page.
-   Confirm the real Cloudflare script loads and an analytics request succeeds
-   when navigating away. Record any CSP violation's directive and resource URL.
+   Confirm the real Cloudflare script loads and its POST to
+   `https://cloudflareinsights.com/cdn-cgi/rum` still returns 204 when navigating
+   away. Record any CSP violation's directive and resource URL.
 4. Require zero unexplained resource violations across those flows. Record the
-   deployed revision, browser, routes checked, and results. Fix narrow policy
-   omissions and repeat report-only validation; do not add broad wildcards or
-   `unsafe-inline`/`unsafe-eval` to silence warnings.
-5. Only after live report-only validation, change the header name from
-   `Content-Security-Policy-Report-Only` to `Content-Security-Policy` in a reviewed
-   follow-up. Update the stage assertion in the security tests. Deploy with
-   authorization, repeat all response/browser checks, and verify an iframe
-   cannot render the site. Local enforcement tests alone do not satisfy this gate.
+   deployed revision, browser, routes checked, and results. If enforcement breaks
+   a supported flow, use the rollback below, fix narrow policy omissions, and
+   repeat report-only validation before enforcing again. Do not add broad
+   wildcards or `unsafe-inline`/`unsafe-eval` to silence warnings.
+5. Verify an iframe cannot render the site and record the post-enforcement
+   results. Local enforcement tests alone do not establish production behavior.
 
 Completing issue #12 requires verification of production rollout and normal page
 behavior. A successful local build or test run is not production evidence.
 
 ## Rollback
 
-If enforcing CSP breaks a supported flow, return the header name to report-only,
-redeploy, and recheck the affected response and browser. Keep the independent
-framing restriction unless embedding is deliberately approved.
+If enforcing CSP breaks a supported flow, replace `Content-Security-Policy` with
+`Content-Security-Policy-Report-Only`, retaining the directive value and removing
+the enforcing header. Update the stage assertion in the security tests to expect
+report-only; the test helper supports both modes. Redeploy with authorization and
+recheck the affected response and browser. Keep the independent framing
+restriction unless embedding is deliberately approved.
 
 To clear a dynamically learned host policy, serve
 `Strict-Transport-Security: max-age=0` over HTTPS from that hostname and verify

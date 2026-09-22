@@ -28,12 +28,13 @@ async function headerBlocks() {
   return blocks
 }
 
-async function applyCandidate(page: Page, enforce: boolean) {
+async function applyPolicy(page: Page, enforce: boolean) {
   const headers = { ...(await headerBlocks())['/*'] }
-  if (enforce) {
-    headers['content-security-policy'] = headers['content-security-policy-report-only']
-    delete headers['content-security-policy-report-only']
-  }
+  const policy = headers['content-security-policy'] ?? headers['content-security-policy-report-only']
+  expect(policy, 'Built CSP must exist before testing either mode').toBeTruthy()
+  delete headers['content-security-policy']
+  delete headers['content-security-policy-report-only']
+  headers[enforce ? 'content-security-policy' : 'content-security-policy-report-only'] = policy
   await page.addInitScript(() => {
     const observed = window as unknown as ObservedWindow
     observed.cspViolations = []
@@ -48,7 +49,11 @@ async function applyCandidate(page: Page, enforce: boolean) {
   await page.route('http://127.0.0.1:4173/**', async route => {
     if (route.request().resourceType() !== 'document') return route.continue()
     const response = await route.fetch()
-    await route.fulfill({ response, headers: { ...response.headers(), ...headers } })
+    const responseHeaders = { ...response.headers() }
+    // Keep the two modes independent even if the local server starts applying CSP.
+    delete responseHeaders['content-security-policy']
+    delete responseHeaders['content-security-policy-report-only']
+    await route.fulfill({ response, headers: { ...responseHeaders, ...headers } })
   })
 }
 
@@ -58,14 +63,14 @@ async function violations(page: Page) {
   return page.evaluate(() => (window as unknown as ObservedWindow).cspViolations)
 }
 
-test.describe('candidate security policy (local response injection)', () => {
+test.describe('security policy (local response injection)', () => {
   test.skip(Boolean(process.env.PLAYWRIGHT_BASE_URL), 'Local policy simulation must not replace deployed headers')
 
-  test('build ships report-only CSP and two independent HSTS host rules', async () => {
+  test('build ships enforced CSP and two independent HSTS host rules', async () => {
     const blocks = await headerBlocks()
     expect(Object.keys(blocks)).toEqual(['/*', 'https://akmasha.dev/*', 'https://www.akmasha.dev/*'])
-    expect(blocks['/*']['content-security-policy-report-only']).toContain("frame-ancestors 'none'")
-    expect(blocks['/*']['content-security-policy']).toBeUndefined()
+    expect(blocks['/*']['content-security-policy']).toContain("frame-ancestors 'none'")
+    expect(blocks['/*']['content-security-policy-report-only']).toBeUndefined()
     expect(blocks['/*']['strict-transport-security']).toBeUndefined()
     expect(blocks['/*']['x-frame-options']).toBe('DENY')
     for (const host of ['akmasha.dev', 'www.akmasha.dev']) {
@@ -74,8 +79,8 @@ test.describe('candidate security policy (local response injection)', () => {
   })
 
   for (const enforce of [false, true]) {
-    test.describe(enforce ? 'enforcement simulation' : 'report-only', () => {
-      test.beforeEach(async ({ page }) => { await applyCandidate(page, enforce) })
+    test.describe(enforce ? 'enforcement' : 'report-only rollback simulation', () => {
+      test.beforeEach(async ({ page }) => { await applyPolicy(page, enforce) })
 
       for (const path of [...routes.map(route => route.path), '/not-a-real-page']) {
         test(`${path}: scripts, fonts, styles and images work without violations`, async ({ page }) => {
@@ -83,6 +88,10 @@ test.describe('candidate security policy (local response injection)', () => {
           page.on('pageerror', error => errors.push(error.message))
           const response = await page.goto(path)
           expect(response?.status()).toBe(path === '/not-a-real-page' ? 404 : 200)
+          const activeHeader = enforce ? 'content-security-policy' : 'content-security-policy-report-only'
+          const inactiveHeader = enforce ? 'content-security-policy-report-only' : 'content-security-policy'
+          expect(response?.headers()[activeHeader]).toBeTruthy()
+          expect(response?.headers()[inactiveHeader]).toBeUndefined()
           const heading = page.getByRole('heading', { level: 1 })
           await expect(heading).toBeVisible()
           // Check real downloaded fonts, not merely a CSS family declaration.
@@ -156,7 +165,7 @@ test.describe('candidate security policy (local response injection)', () => {
         expect(await page.locator('body').getAttribute('data-inline-test')).toBe(enforce ? null : 'ran')
       })
 
-      test('framing is denied even during the report-only rollout', async ({ page }) => {
+      test('framing is denied in enforcement and report-only modes', async ({ page }) => {
         // A header-free parent ensures the child response's framing policy is
         // tested, rather than the parent's default-src blocking the iframe.
         await page.route('http://127.0.0.1:4173/frame-test', route => route.fulfill({
