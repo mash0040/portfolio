@@ -5,7 +5,37 @@ import { routes, projects } from '../routes'
 import { canonicalUrl, NOT_FOUND_META, OG_IMAGE } from '../../src/utils/seo'
 
 for (const route of routes) {
+  test(`${route.path}: client navigation preserves canonical metadata and active navigation`, async ({ page, isMobile }) => {
+    await page.goto(route.path === '/' ? '/projects/' : '/')
+    const sectionPath = route.path.startsWith('/projects/') ? '/projects/' : route.path
+    const sectionName = { '/': 'Home', '/about/': 'About', '/projects/': 'Projects', '/contact/': 'Contact' }[sectionPath]!
+    const nav = page.getByRole('navigation', { name: 'Primary' })
+    if (isMobile) await nav.getByRole('button', { name: 'Open menu' }).click()
+    await nav.getByRole('link', { name: sectionName, exact: true }).click()
+    if (route.path !== sectionPath) {
+      await page.getByRole('main').locator(`a[href="${route.path}"]`).first().click()
+    }
+    await expect(page).toHaveURL(new RegExp(`${route.path}$`))
+    await expect(page).toHaveTitle(route.title)
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://akmasha.dev${route.path}`)
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', `https://akmasha.dev${route.path}`)
+    if (isMobile) {
+      await expect(nav.getByRole('button', { name: 'Open menu' })).toHaveAttribute('aria-expanded', 'false')
+      await nav.getByRole('button', { name: 'Open menu' }).click()
+    }
+    await expect(nav.getByRole('link', { name: sectionName, exact: true })).toHaveAttribute('aria-current', 'page')
+  })
+
   test(`${route.path}: direct load, metadata and internal links`, async ({ page, request }) => {
+    const expectedPath = `${route.path.replace(/\/+$/, '')}/`
+    const expectedCanonical = `https://akmasha.dev${expectedPath}`
+    expect(route.path).toBe(expectedPath)
+    expect(canonicalUrl(route.path)).toBe(expectedCanonical)
+    // Disallow redirect following so a successful final response cannot hide
+    // a canonical URL that disagrees with the host's preferred spelling.
+    const direct = await request.get(expectedPath, { maxRedirects: 0 })
+    expect(direct.status()).toBe(200)
+    expect(direct.headers().location).toBeUndefined()
     const errors: string[] = []
     page.on('pageerror', error => errors.push(error.message))
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()) })
@@ -21,10 +51,13 @@ for (const route of routes) {
         description: document.querySelector('meta[name="description"]')?.getAttribute('content'),
         canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href'),
         ogTitle: document.querySelector('meta[property="og:title"]')?.getAttribute('content'),
+        ogUrl: document.querySelector('meta[property="og:url"]')?.getAttribute('content'),
       }
     }, html)
-    expect(head).toEqual({ title: route.title, description: route.description, canonical: canonicalUrl(route.path), ogTitle: route.title })
+    expect(head).toEqual({ title: route.title, description: route.description, canonical: expectedCanonical, ogTitle: route.title, ogUrl: expectedCanonical })
     await expect(page).toHaveTitle(route.title)
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', expectedCanonical)
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', expectedCanonical)
     await expect(page.getByRole('main')).toBeVisible()
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     const paths = await page.locator('a[href]').evaluateAll(anchors => [...new Set(anchors
@@ -32,7 +65,9 @@ for (const route of routes) {
       .filter(url => url.origin === location.origin && !url.hash)
       .map(url => url.pathname))])
     for (const path of paths) {
-      const linked = await request.get(path)
+      const contentRoute = routes.find(route => route.path.replace(/\/$/, '') === path.replace(/\/$/, ''))
+      if (contentRoute) expect.soft(path, 'Content links use canonical paths').toBe(contentRoute.path)
+      const linked = await request.get(path, { maxRedirects: 0 })
       expect.soft(linked.status(), `Internal link ${path}`).toBe(200)
     }
     expect(errors, 'Browser errors').toEqual([])
@@ -108,7 +143,7 @@ for (const path of ['/not-a-real-page', '/projects/not-a-real-project']) {
     expect(await response!.text()).toContain(`<title>${NOT_FOUND_META.title}</title>`)
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/not found/i)
     await page.getByRole('main').getByRole('link', { name: /projects/i }).click()
-    await expect(page).toHaveURL(/\/projects$/)
+    await expect(page).toHaveURL(/\/projects\/$/)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Projects.')
   })
 }

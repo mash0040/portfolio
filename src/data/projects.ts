@@ -141,7 +141,7 @@ export const projects: Project[] = [
       "Plant library with growing information and companion planting guidance",
       "Care history, recurring tasks, and today/upcoming/overdue views",
       "Email-verified registration and secure password recovery",
-      "Protected interactive demo account for recruiters and visitors",
+      "Protected interactive demo account for visitors",
       "Responsive workflows for desktop and mobile",
     ],
     challenges:
