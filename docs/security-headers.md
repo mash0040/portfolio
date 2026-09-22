@@ -27,37 +27,32 @@ that a resource was blocked. Do not point reports at a nonexistent endpoint or
 Cloudflare's unrelated network-error reporting service. This setup does not
 collect unattended production visitor reports.
 
-## HSTS: two independent host policies
+## HSTS: explicit headers and inherited .dev protection
+
+The `.dev` top-level domain is HSTS-preloaded, including its subdomains.
+The preload service reports `www.akmasha.dev` as `preloaded` through `dev`.
+Browsers honoring that entry upgrade HTTP to HTTPS before contacting either
+hostname, including on a first visit. A missing explicit response header does
+not remove that inherited protection. Clients without that preload behavior
+are outside this guarantee; a `curl` header check only shows what the server sends.
 
 | Hostname | Initial HTTPS header | Delivery |
 | --- | --- | --- |
 | `akmasha.dev` | `Strict-Transport-Security: max-age=86400` | Host-specific Pages rule for static responses. Verify redirects separately. |
-| `www.akmasha.dev` | `Strict-Transport-Security: max-age=86400` | Must also be set on the existing HTTPS 308 redirect at the Cloudflare redirect layer. The Pages rule only covers responses that reach Pages. |
+| `www.akmasha.dev` | `Strict-Transport-Security: max-age=86400` where Pages serves a response | The Pages rule does not cover the existing HTTPS 308 redirect. An explicit header on that redirect is optional; its absence is an accepted, documented limitation because of inherited `.dev` preload protection. |
 
-Neither policy contains `includeSubDomains` or `preload`. Each hostname must send
-its own header over valid HTTPS; the browser remembers them independently.
-The one-day lifetime limits the initial commitment. Keep HTTPS working on both
-hosts and do not increase the duration until the rollout is verified.
+The two explicit response policies remain scoped to their respective hosts,
+without `includeSubDomains` or `preload`. If received over HTTPS, these headers
+are remembered independently. Their one-day lifetime only limits the dynamically
+learned policies; it does not limit or override inherited `.dev` preloading.
+Omitting those directives does not opt either hostname or other `.dev`
+subdomains out of the TLD's protection. Keep valid HTTPS working on both hosts.
 
-**Deploying this repository alone does not complete the www policy.** Cloudflare
-processes redirects before Pages headers. The current redirect configuration is
-outside this repository and must be inspected during the authorized rollout.
-Preserve the 308 redirect to `https://akmasha.dev` and its path/query behavior.
-Configure `max-age=86400` on the HTTPS redirect response itself, scoped to
-`www.akmasha.dev`. If a response-header Transform Rule is applicable to the
-existing redirect, use this exact match and **Set static** (not Add):
-
-```text
-(http.host eq "www.akmasha.dev" and ssl)
-Strict-Transport-Security: max-age=86400
-```
-
-Use Cloudflare Trace and the response checks below to verify execution. An
-earlier terminating redirect can bypass later rules; creating a Transform Rule
-is not proof that it applies. If the redirect mechanism cannot attach the
-header, resolve that deployment configuration before declaring www complete.
-Do not silently enable zone-wide HSTS, change unrelated hostnames, or replace
-the redirect with new infrastructure. Any broader change needs its own review.
+Cloudflare processes redirects before Pages headers. Preserve the working 308
+redirect to `https://akmasha.dev`, including its path/query behavior. No additional
+Cloudflare rule, Worker, redirect replacement, or other infrastructure is required
+solely to attach an HSTS header to that redirect. Validate HTTPS, redirect behavior,
+and inherited preload coverage separately from explicit header presence.
 
 ## Local validation
 
@@ -82,8 +77,9 @@ matching, redirects, or TLS. These local tests are skipped when
 
 ## Authorized rollout and enforcement gate
 
-1. Deploy report-only configuration and configure the www redirect's HSTS
-   delivery. Deployment and Cloudflare changes require separate authorization.
+1. Deploy report-only configuration and verify valid HTTPS and inherited `.dev`
+   preload coverage for both hosts, preserving the existing www redirect.
+   Deployment and Cloudflare changes require separate authorization.
 2. Inspect HTTPS **GET response headers without following redirects**, using
    `curl.exe -sS -D - -o NUL <URL>` on Windows. Check:
 
@@ -93,13 +89,17 @@ matching, redirects, or TLS. These local tests are skipped when
    | `https://akmasha.dev/projects/traineros/` | 200; same headers and route-specific title/canonical metadata. |
    | `https://akmasha.dev/not-a-real-page` | 404; same security headers and not-found metadata. |
    | `https://akmasha.dev/Ekene_Masha_Resume.pdf` | 200; `application/pdf`, HSTS, PDF opens normally. |
-   | `https://www.akmasha.dev/` | 308 to `https://akmasha.dev/`; its own HSTS header. |
-   | `https://www.akmasha.dev/projects/traineros/?check=1` | 308 preserving the path and query; its own HSTS header. |
+   | `https://www.akmasha.dev/` | Valid HTTPS; 308 to `https://akmasha.dev/`. An explicit HSTS header is optional. |
+   | `https://www.akmasha.dev/projects/traineros/?check=1` | Valid HTTPS; 308 preserving the path and query. An explicit HSTS header is optional. |
 
-   Every HTTPS HSTS value must be exactly `max-age=86400`, with no duplicate
-   values, `includeSubDomains`, or `preload`. Also check HTTP entry points for
-   both hosts and confirm they lead to HTTPS without a loop. A final apex 200
-   reached using `curl -L` does not prove the www response carries HSTS.
+   Where an explicit HSTS header is served, its value must be exactly
+   `max-age=86400`, with no duplicates, `includeSubDomains`, or `preload`.
+   Record an absent header on the www redirect as the accepted limitation above,
+   not as missing protection in browsers honoring the `.dev` preload entry.
+   Confirm inherited coverage using the linked preload status and Chromium list.
+   Also check HTTP entry points for both hosts and confirm they lead to HTTPS
+   without a loop. A final apex 200 reached using `curl -L` does not establish
+   the www response's headers or the browser's preload protection.
 3. In a clean browser with extensions disabled, visit all pages directly and
    through navigation on desktop and mobile. Open DevTools with Preserve log:
    confirm fonts, screenshot thumbnails/full-size lightboxes, mobile menu,
@@ -116,8 +116,8 @@ matching, redirects, or TLS. These local tests are skipped when
    authorization, repeat all response/browser checks, and verify an iframe
    cannot render the site. Local enforcement tests alone do not satisfy this gate.
 
-Issue #12 remains open until production rollout and normal page behavior have
-been verified. A successful local build or test run is not production evidence.
+Completing issue #12 requires verification of production rollout and normal page
+behavior. A successful local build or test run is not production evidence.
 
 ## Rollback
 
@@ -125,15 +125,20 @@ If enforcing CSP breaks a supported flow, return the header name to report-only,
 redeploy, and recheck the affected response and browser. Keep the independent
 framing restriction unless embedding is deliberately approved.
 
-To revoke HSTS, serve `Strict-Transport-Security: max-age=0` over HTTPS on **each**
-hostname, including the www redirect, and verify both responses. Removing the
-header alone does not clear a browser's cached policy. Keep valid HTTPS through
-at least the previous max-age period for clients that do not revisit immediately.
+To clear a dynamically learned host policy, serve
+`Strict-Transport-Security: max-age=0` over HTTPS from that hostname and verify
+the response. Removing the header alone leaves that policy cached until expiry.
+This does not disable inherited `.dev` preloading, and waiting one day does not
+make HTTP usable in browsers honoring it. Valid HTTPS must remain available on
+both hosts. Do not modify the www redirect solely to clear an optional dynamic
+policy; any previously learned policy can expire while preload protection remains.
 
 ## References
 
 - [Cloudflare Pages headers and redirect precedence](https://developers.cloudflare.com/pages/configuration/headers/)
 - [Cloudflare analytics CSP requirements](https://developers.cloudflare.com/web-analytics/faq/#what-do-i-need-to-add-to-my-content-security-policy-csp)
-- [Cloudflare Transform Rule execution order](https://developers.cloudflare.com/rules/transform/)
+- [Google Registry: .dev HSTS preloading](https://www.registry.google/domains/dev/)
+- [Inherited preload status of www.akmasha.dev](https://hstspreload.org/api/v2/status?domain=www.akmasha.dev)
+- [Chromium HSTS preload list: dev includes subdomains](https://chromium.googlesource.com/chromium/src/+/main/net/http/transport_security_state_static.json)
 - [CSP style attributes and DOM style properties](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/style-src-attr)
 - [HSTS host scope and expiration](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Strict-Transport-Security)

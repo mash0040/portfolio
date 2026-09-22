@@ -5,11 +5,11 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
 
-# Independent, one-day host policies. Do not broaden to other subdomains or preload.
+# Explicit, independent one-day host policies; inherited .dev preloading also applies.
 https://akmasha.dev/*
   Strict-Transport-Security: max-age=86400
 
-# Applies only if Pages serves the response. The existing www redirect needs
-# its own HSTS header at the redirect layer; _headers does not configure it.
+# Applies only if Pages serves the response. Preserve the existing www redirect;
+# an explicit HSTS header there is optional because .dev preload protection applies.
 https://www.akmasha.dev/*
   Strict-Transport-Security: max-age=86400
